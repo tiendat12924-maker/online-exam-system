@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+    <link rel="stylesheet" href="/css/index.css">
+    <title>Document</title>
+</head>
+<body>
+	 <div class="overlay"></div>
+	 <div class="khodethi">
+          <div class="khodethi-left">
+               <div class="khode-left-top">
+                   Ôn thi tốt nghiệp THPT
+                   <i class="fa-solid fa-chevron-right" style="font-size: 10px;"></i>
+               </div>
+               <div class="khode-left-top khode-left-bottom">
+                   ĐGNL & ĐGTD
+                   <i class="fa-solid fa-chevron-right" style="font-size: 10px;"></i>
+               </div>
+          </div>
+          <div class="khodethi-right">
+              <div class="onthithpt active" >
+                  <div class="khode-right-top">
+                      <div class="khode-right-logo">
+                           <img src="images/k12.png" alt="">
+                      </div>
+                      <div class="khode-right-name">
+                            Ôn thi tốt nghiệp THPT
+                            <i class="fa-solid fa-chevron-right"></i>
+                      </div>
+                 </div>
+                 <div class="khode-right-bottom">
+                      <div class="khode-bottom-title">
+                           LUYỆN TẬP KÈM LỜI GIẢI
+                      </div>
+                      <div class="khode-bottom-content">
+                           <div class="bottom-content" th:each="subject : ${subjects}">
+                                <a th:href="@{/trangdethi(subjectId=${subject.id})}" class="khode-link">
+	                                <div class="khode-content">
+	                                <div class="khode-content-icon"><i th:class="${subject.icon}"></i></div>
+	                                <div class="khode-content-name" th:text="${subject.name}"></div>
+	                                <div class="khode-angle-right"><i class="fa-solid fa-angle-right"></i></div>
+	                                </div>
+	                                <div class="number-test">120+ bài test</div>
+	                            </a>
+                          </div>
+                      </div>
+                 </div>
+              </div>
+              <div class="onthidgnl" >
+                <div class="khode-right-top">
+                     <div class="khode-right-logo">
+                          <img src="images/dgnl.jpg" alt="">
+                     </div>
+                     <div class="khode-right-name">
+                          ĐGNL & ĐGTD
+                          <i class="fa-solid fa-chevron-right"></i>
+                     </div>
+               </div>
+					<div class="khode-right-bottom">
+						<div class="khode-bottom-title">
+					         ÔN THI ĐGNL & ĐGTD
+					    </div>
+					    <div class="khode-bottom-content">
+					        <div class="bottom-content">
+					             <div class="khode-content">
+					                  <div class="khode-content-icon">
+					                       <img src="images/dhqghn.jpg" alt="">
+					                  </div>
+					                  <div class="khode-content-name">ĐH Quốc gia Hà Nội</div>
+					                  <div class="khode-angle-right"><i class="fa-solid fa-angle-right"></i></div>
+					             </div>
+					             <div class="number-test" style="margin-left: 40px;">120+ bài test</div>
+					        </div>
+					        <div class="bottom-content">
+					             <div class="khode-content">
+						             <div class="khode-content-icon">
+						                  <img src="images/hcm.jpg" alt="">
+						             </div>
+						             <div class="khode-content-name">ĐH Quốc gia Hồ Chí Minh </div>
+						             <div class="khode-angle-right"><i class="fa-solid fa-angle-right"></i></div>
+					             </div>
+					             <div class="number-test" style="margin-left: 40px;">120+ bài test</div>
+					        </div>
+					       <div class="bottom-content">
+						       <div class="khode-content">
+							       <div class="khode-content-icon"><img src="images/dhbk.jpg" alt=""></div>
+							       <div class="khode-content-name">ĐH Bách Khoa Hà Nội</div>
+							       <div class="khode-angle-right"><i class="fa-solid fa-angle-right"></i></div>
+						       </div>
+						       <div class="number-test" style="margin-left: 40px;">120+ bài test</div>
+					       </div>
+					    </div>                                
+					</div>           
+              </div>        
+          </div>
+	 </div>
+	 <div class="header">
+	        <div class="header-left">
+	            <div class="logo"><img src="images/logo3.png" alt=""></div>
+	            <div class="option">
+	                <button type="button" class="khode">Kho đề thi</button>
+	            </div>
+	            <div class="option">             
+	                <button type="button" class="practice"> <i class="fa-brands fa-buffer"></i> Quản lý luyện tập</button>     
+	            </div>
+	        </div>
+	        <div class="header-right">
+			    <button type="button" th:if="${session.user == null}" onclick="window.location.href='/login'"> 
+			    		Đăng nhập
+			    </button>
+			    <button type="button" th:if="${session.user != null}" th:text="${session.user.fullName}" onclick="handleLogout()">
+			    </button>
+			</div>
+	    </div>
+	 <div class="body">
+	        <div class="title">
+	            <div class="title-content ">
+	                <div class="attempts">430.068 lượt làm bài</div>
+	            </div>
+	            <div class="title-content title1">Luyện thi tốt nghiệp</div>
+	            <div class="title-content ">
+	                <div class="title2">Phổ thông & Đánh giá năng lực</div>
+	            </div>
+	        </div>
+	        <div class="attent">
+	            <div class="attent-content">
+	                <div class="contents"><span>NỀN TẢNG</span></div>
+	                <div class="contents" style="color: rgb(108, 107, 107); font-size: 20px;"><span>TOP 1</span></div>
+	                <div class="contents"><span>LUYỆN THI ONLINE</span></div>
+	            </div>
+	            <div class="attent-content center">
+	                <div class="contents"><span>THÀNH VIÊN</span></div>
+	                <div class="contents" style="color: rgb(108, 107, 107); font-size: 20px;"><span>20</span></div>
+	                <div class="contents"><span>ĐÃ THAM GIA</span></div>
+	            </div>
+	            <div class="attent-content">
+	                <div class="contents"><span>KHO ĐỀ</span></div>
+	                <div class="contents" style="color: rgb(108, 107, 107); font-size: 20px;"><span>100+</span></div>
+	                <div class="contents"><span>BÀI TEST ONLINE</span></div>
+	            </div>
+	        </div>
+	        <div class="banner">
+	            <img src="images/banner.jpg" alt="">
+	            <div class="main">
+	                <div class="container-wrap">
+	                    <div class="container">
+	                        <div class="picture">
+	                            <img src="images/logo_4.jpg" alt="">
+	                        </div>
+		                    <div class="container-left">
+		                        <div class="container-title">
+		                            <div class="k12"><img src="images/k12.png" alt=""></div>
+		                            Luyện tốt nghiệp THPT
+		                        </div>
+		                        <div class="container-contents">
+		                            <div class="container-content" th:each="subject : ${subjects}">
+		                            	<a th:href="@{/trangdethi(subjectId=${subject.id})}" class="khode-link2">
+			                                <div style="display: flex; align-items: center;">
+			                                    <div class="content-icon">
+			                                    	<i th:class="${subject.icon}"></i>
+			                                    </div>
+			                                    <div class="content-name" th:text="${subject.name}"></div>
+			                                </div>
+			                                <div class="angle-right"><i class="fa-solid fa-angle-right"></i></div>
+			                            </a>
+		                            </div>    
+		                        </div>
+		                    </div>
+		                    <div class="container-right">
+		                        <div class="container-title">
+		                            <div class="k12"><img src="images/dgnl.jpg" alt=""></div>
+		                            Luyện tốt nghiệp ĐGNL
+		                        </div>
+		                        <div class="container-content" style="width: 90%;">
+		                            <div style="display: flex; align-items: center;">
+		                                <div class="content-icon">
+		                                    <div class="content-logo">
+		                                        <img src="images/hcm.jpg" alt="">
+		                                    </div>
+		                                </div>
+		                                <div>Đại học quốc gia TP.HCM</div>
+		                            </div>
+		                            <div class="angle-right"><i class="fa-solid fa-angle-right"></i></div>
+		                        </div>
+		                        <div class="container-content" style="width: 90%;">
+		                            <div style="display: flex; align-items: center;">
+		                                <div class="content-icon">
+		                                    <div class="content-logo">
+		                                        <img src="images/dhqghn.jpg" alt="">
+		                                    </div>
+		                                </div>
+		                                <div>Đại học quốc gia Hà Nội</div>
+		                            </div>
+		                            <div class="angle-right"><i class="fa-solid fa-angle-right"></i></div>
+		                        </div>
+		                        <div class="container-content" style="width: 90%;">
+		                            <div style="display: flex; align-items: center;">
+		                                <div class="content-icon">
+		                                    <div class="content-logo">
+		                                        <img src="images/dhbk.jpg" alt="">
+		                                    </div>
+		                                </div>
+		                                <div>Đại học Bách Khoa Hà Nội</div>
+		                            </div>
+		                            <div class="angle-right"><i class="fa-solid fa-angle-right"></i></div>
+		                        </div>
+		                    </div>
+	                    </div>
+	                </div>
+	            </div>
+	        </div>
+	        <div class="outstanding">
+	            <div class="outstanding-title">
+	                Sự vượt trội của nền tảng Luyện thi DOV THPT
+	            </div>
+	            <div class="outstanding-contents">
+	                <div class="outstanding-content">
+	                    <div class="outstanding-content-top">
+	                        <div class="content-top-title">Bám sát cấu trúc đề thi chính thức</div>
+	                        <span style="font-size: 20px;color: #605e5e;">Hệ thống câu hỏi được xây dựng theo ma trận kiến thức và định hướng ra đề của Bộ GD&ĐT</span>
+	                    </div>
+	                    <div class="outstanding-content-top">
+	                        <div class="content-top-title">Mô phỏng chính xác môi trường thi</div>
+	                        <span style="font-size: 20px;color: #605e5e;">Giao diện và quy trình làm bài tái hiện đầy đủ trải nghiệm phòng thi thực tế</span>
+	                    </div>
+	                </div>
+	                <div class="outstanding-content">
+	                    <video autoplay muted loop id="boy-video">
+	                        <source th:src="@{images/videothgbe.mp4}" type="video/mp4">
+	                    </video>
+	                </div>
+	                <div class="outstanding-content">
+	                    <div class="outstanding-content-top">
+	                        <div class="content-top-title">Phân tích kết quả học tập chi tiết</div>
+	                        <span style="font-size: 20px;color: #605e5e;">Cung cấp báo cáo đánh giá năng lực, giúp xác định điểm mạnh và cần cải thiện</span>
+	                    </div>
+	                    <div class="outstanding-content-top">
+	                        <div class="content-top-title">Hệ thống đề thi toàn diện</div>
+	                        <span style="font-size: 20px;color: #605e5e;">Bao gồm đề luyện tập, đề thi thử và đề minh hoạ, đáp ứng đầy đủ nhu cầu ôn luyện</span>
+	                    </div>
+	                </div>
+	            </div>
+	        </div>
+	    </div>
+	 <div class="footer">
+	        <img src="images/banner-foter.png" alt="">
+	        <div class="contact">
+	            <div class="contact-left">
+	                <div class="contact-left-logo">
+	                    <img src="images/logochim.jpg" alt="">
+	                </div>
+	                <div class="contact-left-content">
+	                    Luyện thi tốt nghiệp THPT và ĐGNL miễn phí
+	                    được phát triển bởi DOL ENGLISH
+	                    dành tặng cho học sinh toàn quốc.
+	                </div>
+	            </div>
+	            <div class="contact-right">
+	                <div class="contact-right-content">
+	                    <div class="contact-right-title">KHO ĐỀ THI</div>
+	                    <div class="contact-right-more">
+	                        <div>Luyện thi THPT</div>
+	                        <div class="angle-right"><i class="fa-solid fa-angle-right"></i></div>
+	                    </div>
+	                    <div class="contact-right-more">
+	                        <div>Luyện thi ĐGNL</div>
+	                        <div class="angle-right"><i class="fa-solid fa-angle-right"></i></div>
+	                    </div>
+	                </div>
+	                <div class="contact-right-content">
+	                    <div class="contact-right-title">Về DOV THPT</div>
+	                    <div class="contact-right-more">
+	                        <div>Giới thiệu</div>
+	                        <div class="angle-right"><i class="fa-solid fa-angle-right"></i></div>
+	                    </div>
+	                    <div class="contact-right-more">
+	                        <div>Chính sách bảo mật</div>
+	                        <div class="angle-right"><i class="fa-solid fa-angle-right"></i></div>
+	                    </div>
+	                    <div class="contact-right-more">
+	                        <div>Điều khoản sử dụng</div>
+	                        <div class="angle-right"><i class="fa-solid fa-angle-right"></i></div>
+	                    </div>
+	                    <div class="contact-right-more">
+	                        <div>Liên hệ</div>
+	                        <div class="angle-right"><i class="fa-solid fa-angle-right"></i></div>
+	                    </div>
+	                </div>                
+	            </div>
+	        </div>
+	    </div>
+	 <script th:src="@{js/index.js}"></script>
+</body>
+</html>

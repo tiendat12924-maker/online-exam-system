@@ -1,0 +1,530 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nhập câu hỏi</title>
+    <link rel="stylesheet" href="/css/uploaddethi2.css">
+    <link rel="stylesheet"  href="/css/uploaddethi.css">
+    <link rel="stylesheet"  href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+</head>
+<body>
+<div class="exam-container">
+    <div class="left-panel">
+        <div class="step-box">
+            <div class="step">
+                <div class="step-number">1</div>
+                <div>
+                    <h3>Chọn phương thức</h3>
+                    <span>Chọn cách thêm đề thi</span>
+                </div>
+            </div>
+            <div class="step active">
+                <div class="step-number">2</div>
+                <div>
+                    <h3>Nhập dữ liệu</h3>
+                    <span>Điền thông tin và câu hỏi</span>
+                </div>
+            </div>
+        </div>
+        <div class="question-card">
+            <h2 style="margin-bottom: 20px;">
+                Nhập câu hỏi
+            </h2>
+            <div class="question-type">
+                <button class="type" data-target="tracnghiemdon">
+                    <i class="fa-regular fa-circle-dot"></i>
+                    Trắc nghiệm đơn
+                </button>
+                <button class="type" data-target="tracnghiemnhom">
+                    <i class="fa-regular fa-square-check"></i>
+                    Trắc nghiệm nhóm
+                </button>
+                <button class="type" data-target="formtuluan">
+                    <i class="fa-solid fa-pencil"></i>
+                    Tự luận
+                </button>
+            </div>
+            <form th:action="@{/admin/question/save}" method="post">
+			    <input type="hidden" name="testId" th:value="${test.id}">
+			    <input type="hidden" name="questionType" value="SINGLE">
+			    <div class="question-form form-group tracnghiemdon">
+			        <label>
+			            Nội dung câu hỏi
+			            <span>*</span>
+			        </label>
+			        <textarea name="content"  placeholder="Nhập nội dung câu hỏi..." required></textarea>
+			        <div class="answer-section">
+				        <h3>Đáp án</h3>
+				        <div class="answer-grid">
+				            <div class="answer-card">
+				                <div class="answer-header">
+				                    <div class="answer-title">
+				                        <span class="answer-tag a">A</span>
+				                        <label>Đáp án A</label>
+				                    </div>
+				                    <input type="radio"  name="correctAnswer"  value="A" required>
+				                </div>
+				                <input  type="text"  name="answerA"  placeholder="Nhập đáp án A"  required>
+				            </div>
+				            <div class="answer-card">
+				                <div class="answer-header">
+				                    <div class="answer-title">
+				                        <span class="answer-tag b">B</span>
+				                        <label>Đáp án B</label>
+				                    </div>
+				                    <input  type="radio" name="correctAnswer"  value="B">
+				                </div>
+				                <input  type="text"  name="answerB"  placeholder="Nhập đáp án B"  required>
+				            </div>
+				            <div class="answer-card">
+				                <div class="answer-header">
+				                    <div class="answer-title">
+				                        <span class="answer-tag c">C</span>
+				                        <label>Đáp án C</label>
+				                    </div>
+				                    <input  type="radio" name="correctAnswer"  value="C">
+				                </div>
+				                <input  type="text"  name="answerC"  placeholder="Nhập đáp án C"  required>
+				            </div>
+				            <div class="answer-card">
+				                <div class="answer-header">
+				                    <div class="answer-title">
+				                        <span class="answer-tag d">D</span>
+				                        <label>Đáp án D</label>
+				                    </div>
+				                    <input  type="radio"  name="correctAnswer"  value="D">
+				                </div>
+				                <input  type="text"  name="answerD"  placeholder="Nhập đáp án D"  required>
+				            </div>
+				        </div>
+				    </div>
+				    <div class="form-group">
+				        <textarea class="small-textarea" name="explanation"  placeholder="Nhập lời giải hoặc giải thích"></textarea>
+				    </div>
+				    <div class="button-group">
+				        <button class="btn-secondary">
+				            <i class="fa-solid fa-floppy-disk"></i>
+				            Lưu câu hỏi
+				        </button>
+				        <button class="btn-primary">
+				            Lưu & nhập tiếp
+				            <i class="fa-solid fa-arrow-right"></i>
+				        </button>
+				    </div>
+			    </div>
+			</form>
+	        <form id="groupQuestionForm" th:action="@{/admin/question/save}" method="post">
+    			<input type="hidden" name="testId" th:value="${test.id}">
+				<input type="hidden" name="questionType" value="MULTIPLE">
+	            <div class="question-form tracnghiemnhom">
+	                <div class="group-card">
+	                    <div class="group-header">
+	                        <div>
+	                            <h3>1. Đoạn văn / Đoạn thông tin</h3>
+	                            <p>Nội dung chung mà học sinh sẽ đọc trước khi trả lời các câu hỏi bên dưới.</p>
+	                        </div>                     
+	                    </div>
+	                    <div class="form-group">
+	                        <label>Nội dung đoạn văn <span>*</span></label>
+	                        <textarea class="editor" id="groupContent" name="passage" placeholder="Nhập đoạn văn hoặc đoạn thông tin..."></textarea>                      
+	                    </div>                 
+	                </div>
+	                <div class="child-question-card">
+	                    <div class="child-header">
+	                        <h3>2. Danh sách câu hỏi con</h3>
+	                        <button type="button" class="btn-add-child" onclick="scrollToQuestionForm()">
+							    <i class="fa-solid fa-plus"></i>
+							    Thêm câu hỏi con
+							</button>
+	                    </div>
+	                    <table class="child-table">
+	                        <thead>
+	                            <tr>
+	                                <th width="60">STT</th>
+	                                <th>Nội dung câu hỏi</th>
+	                                <th width="90">Điểm</th>
+	                                <th width="110">Thao tác</th>
+	                            </tr>
+	                        </thead>
+	                        <tbody id="childQuestionTable">
+						
+						    </tbody>
+	                    </table>
+	                </div>
+	                <div class="add-question-card">
+		                <div class="card-title">
+		                    <h3>3. Thêm câu hỏi con mới</h3>
+		                </div>
+	                    <label>
+				            Nội dung câu hỏi
+				            <span>*</span>
+				        </label>
+				        <textarea id="questionContent" name="content"  placeholder="Nhập nội dung câu hỏi..."></textarea>
+	                    <div class="answer-section">
+					        <h3>Đáp án</h3>
+					        <div class="answer-grid">
+					            <div class="answer-card">
+					                <div class="answer-header">
+					                    <div class="answer-title">
+					                        <span class="answer-tag a">A</span>
+					                        <label>Đáp án A</label>
+					                    </div>
+					                    <input type="radio"  name="correctAnswer"  value="A">
+					                </div>
+					                <input  type="text"  name="answerA"  placeholder="Nhập đáp án A">
+					            </div>
+					            <div class="answer-card">
+					                <div class="answer-header">
+					                    <div class="answer-title">
+					                        <span class="answer-tag b">B</span>
+					                        <label>Đáp án B</label>
+					                    </div>
+					                    <input  type="radio" name="correctAnswer"  value="B">
+					                </div>
+					                <input  type="text"  name="answerB"  placeholder="Nhập đáp án B">
+					            </div>
+					            <div class="answer-card">
+					                <div class="answer-header">
+					                    <div class="answer-title">
+					                        <span class="answer-tag c">C</span>
+					                        <label>Đáp án C</label>
+					                    </div>
+					                    <input  type="radio" name="correctAnswer"  value="C">
+					                </div>
+					                <input  type="text"  name="answerC"  placeholder="Nhập đáp án C">
+					            </div>
+					            <div class="answer-card">
+					                <div class="answer-header">
+					                    <div class="answer-title">
+					                        <span class="answer-tag d">D</span>
+					                        <label>Đáp án D</label>
+					                    </div>
+					                    <input  type="radio"  name="correctAnswer"  value="D">
+					                </div>
+					                <input  type="text"  name="answerD"  placeholder="Nhập đáp án D">
+					            </div>
+					        </div>
+					    </div>
+					    <div id="hiddenInputs"></div>
+	                    <div class="button-group">                    	
+	                        <button class="btn-secondary">
+	                            Hủy
+	                        </button>
+	                        <button type="button" id="addQuestionBtn" class="btn-primary">
+							    <i class="fa-solid fa-plus"></i>
+							    Thêm câu hỏi
+							</button>
+	                    </div>
+	                </div>
+	                <button  type="submit"   class="btn-primary">		
+					    <i class="fa-solid fa-floppy-disk"></i>				
+					    Lưu nhóm câu hỏi				
+					</button>
+	            </div>
+            </form>
+            <div class="question-form formtuluan" >
+                <div class="essay-select">
+                    <label> Loại tự luận</label>
+                    <select id="essayType">
+                        <option value="fill"> Điền từ vào chỗ trống </option>
+                        <option value="sort"> Sắp xếp thứ tự </option>
+                    </select>
+                </div>
+                <div id="fillEssay"  style="display: none;">
+                    <div class="question-card">
+                        <div class="editor-answer">
+                            <div class="editor-box">
+                                <div class="box-title">
+                                    Nội dung câu hỏi
+                                </div>
+                                <textarea  placeholder="Ví dụ:Hà Nội là thủ đô của ({Việt Nam}) Nước có công thức hóa học là ({H2O})"></textarea>
+                                <div class="note">
+                                    <i class="fa-solid fa-circle-info"></i>
+                                    Nhập đáp án vào trong dấu ngoặc {}
+                                </div>
+                            </div>
+                            <div class="answer-table">
+                                <div class="table-header">
+                                    <h3> Danh sách đáp án</h3>
+                                    <button>
+                                        <i class="fa-solid fa-plus"></i>
+                                        Thêm đáp án
+                                    </button>
+                                </div>
+                                <table>
+                                    <thead>
+                                    <tr>
+                                        <th width="60"> STT </th>
+                                        <th> Đáp án</th>
+                                        <th width="90"> Thao tác  </th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <tr>
+                                        <td>1</td>
+                                        <td>Việt Nam</td>
+                                        <td>
+                                            <i class="fa-solid fa-pen" style="margin-bottom: 10px;"></i>
+                                            <i class="fa-solid fa-trash"></i>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>2</td>
+                                        <td>H2O</td>
+                                        <td>
+                                            <i class="fa-solid fa-pen" style="margin-bottom: 10px;"></i>
+                                            <i class="fa-solid fa-trash"></i>
+                                        </td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        <div class="fill-bottom">
+                            <div class="input-group flex">
+                                <label>
+                                    Giải thích
+                                    <span>(không bắt buộc)</span>
+                                </label>
+                                <textarea
+                                        placeholder="Nhập giải thích cho đáp án..."></textarea>
+                            </div>
+                        </div>
+                        <div class="button-group">
+                            <button class="btn-cancel"> Hủy </button>
+                            <button class="btn-save">
+                                <i class="fa-solid fa-floppy-disk"></i>
+                                Lưu câu hỏi
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div id="sortEssay">
+                    <div class="question-card">
+                        <div class="sort-top">
+                            <div class="editor-box">
+                                <div class="box-title">   Đề bài   </div>
+                                <textarea  placeholder="Ví dụ: Hãy sắp xếp các bước sau theo đúng thứ tự"></textarea>
+                            </div>
+                            <div class="sort-order">
+                                <label> Thứ tự đúng  </label>
+                                <input  type="text"  placeholder="VD: 2,1,3,4">
+                            </div>
+                        </div>
+                        <div class="step-list">
+                            <div class="table-header">
+                                <h3>  Danh sách các bước </h3>
+                                <button>
+                                    <i class="fa-solid fa-plus"></i>
+                                    Thêm bước
+                                </button>
+                            </div>
+                            <table>
+                                <thead>
+                                <tr>
+                                    <th width="60">  STT </th>
+                                    <th> Nội dung  </th>
+                                    <th width="90"> Thao tác  </th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr>
+                                    <td>1</td>
+                                    <td>Bật máy tính</td>
+                                    <td>  <i class="fa-solid fa-trash"></i> </td>
+                                </tr>
+                                <tr>
+                                    <td>2</td>
+                                    <td>Đăng nhập tài khoản</td>
+                                    <td> <i class="fa-solid fa-trash"></i>  </td>
+                                </tr>
+                                <tr>
+                                    <td>3</td>
+                                    <td>Mở phần mềm</td>
+                                    <td>  <i class="fa-solid fa-trash"></i>  </td>
+                                </tr>
+                                <tr>
+                                    <td>4</td>
+                                    <td>Làm bài tập</td>
+                                    <td>   <i class="fa-solid fa-trash"></i> </td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="sort-bottom">                         
+                            <div class="input-group flex">
+                                <label> Giải thích <span>(không bắt buộc)</span> </label>
+                                <textarea placeholder="Nhập lời giải hoặc giải thích..."></textarea>
+                            </div>
+                        </div>
+                        <div class="button-group">
+                            <button class="btn-cancel"> Hủy  </button>
+                            <button class="btn-save">
+                                <i class="fa-solid fa-floppy-disk"></i>
+                                Lưu câu hỏi
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="right-panel">
+        <div class="right-panel-form tracnghiemdon right-question-form">
+            <div class="info-card">
+                <h3>
+                    <i class="fa-solid fa-file-lines"></i>
+                    Thông tin đề thi
+                </h3>
+                <div class="info-item">
+                    <span>Tên đề</span>
+                    <strong th:text="${test.title}"></strong>
+                </div>
+                <div class="info-item">
+                    <span>Môn học</span>
+                    <strong th:text="${test.subject.name}">Môn học</strong>
+                </div>
+                <div class="info-item">
+                    <span>Thời gian</span>
+                    <strong>
+			            <span th:text="${test.duration}"></span> phút
+			        </strong>
+                </div>
+                <div class="info-item">
+                    <span>Số câu</span>
+                    <strong>20 câu</strong>
+                </div>
+            </div>
+            <div class="guide-card">
+                <h3>
+                    <i class="fa-solid fa-lightbulb"></i>
+                    Hướng dẫn
+                </h3>
+                <ul>
+                    <li>
+                        Chọn đáp án đúng bằng nút radio.
+                    </li>
+                    <li>
+                        Điền đầy đủ nội dung và đáp án.
+                    </li>
+                    <li>
+                        Có thể lưu từng câu hỏi.
+                    </li>
+                    <li>
+                        Sau khi đủ số câu, nhấn hoàn thành.
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <div class="right-panel-form tracnghiemnhom right-question-form">
+        	<div th:each="group : ${groups}" class="group-preview">
+	            <div class="preview-card">
+	                <div class="preview-header">
+	                    <h3>
+	                        <i class="fa-solid fa-eye"></i>
+	                        Xem trước (Học sinh sẽ thấy)
+	                    </h3>
+	                </div>
+	                <div class="preview-box">
+	                    <h4>ĐOẠN VĂN</h4>
+	                    <p>
+	                        <p th:text="${group.instruction}">
+	                    </p>
+	                    <p>
+	                        <p th:text="${group.passage}">
+	                    </p>
+	                    <hr>
+	                    <h4>CÂU HỎI</h4>
+	                    <ol>
+	                        <li
+					            th:each="question : ${group.questions}"
+					            th:text="${question.content}">
+					        </li>
+	                    </ol>
+	                </div>
+	            </div>
+	            <div class="info-card">
+                <h3>
+                    <i class="fa-solid fa-layer-group"></i>
+                    Thông tin nhóm câu hỏi
+                </h3>
+                <div class="info-item">
+                    <span>Loại nhóm</span>
+                    <strong>Trắc nghiệm nhóm</strong>
+                </div>
+                <div class="info-item">
+                    <span>Số câu hỏi</span>
+                    <strong th:text="${group.questions.size()}">câu</strong>
+                </div>
+            </div>
+            </div>
+            <div class="guide-card">
+                <h3>
+                    <i class="fa-solid fa-circle-info"></i>
+                    Lưu ý
+                </h3>
+                <ul>
+                    <li>
+                        Học sinh phải đọc đoạn văn trước khi làm.
+                    </li>
+                    <li>
+                        Có thể có nhiều câu hỏi con.
+                    </li>
+                    <li>
+                        Mỗi câu hỏi con có điểm riêng.
+                    </li>
+                    <li>
+                        Tổng điểm nhóm sẽ được tự động tính.
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <div class="right-panel-form formtuluan right-question-form" >
+            <div class="essay-right">
+                <div class="preview-card">
+                    <div class="preview-title">
+                        <i class="fa-solid fa-eye"></i>
+                        Xem trước (Học sinh sẽ thấy)
+                    </div>
+                    <div class="preview-body">
+                        <div class="preview-question">
+                            Hà Nội là thủ đô của
+                            <span class="blank"></span>
+                        </div>
+                        <div class="preview-question">
+                            Nước có công thức hóa học là
+                            <span class="blank"></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="info-card">
+                    <h3>
+                        <i class="fa-solid fa-pen"></i>
+                        Thông tin câu hỏi
+                    </h3>
+                    <div class="info-item">
+                        <span> Loại câu hỏi </span>
+                        <strong>  Tự luận - Điền từ </strong>
+                    </div>
+                    <div class="info-item">
+                        <span>  Số chỗ trống  </span>
+                        <strong>   2 </strong>
+                    </div>
+                </div>
+                <div class="note-card">
+                    <h3> Lưu ý  </h3>
+                    <ul>
+                        <li>  Học sinh sẽ nhập đáp án vào ô trống. </li>
+                        <li>   Có thể có nhiều chỗ trống trong một câu.  </li>
+                        <li>  Mỗi ô trống chỉ có một đáp án đúng.  </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script th:src="@{/js/uploaddethi.js}"></script>
+</body>
+</html>

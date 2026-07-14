@@ -1,0 +1,151 @@
+.body{
+    padding: 0;
+}
+.banner-contents{
+    display: flex;
+    justify-content: center;
+    position: absolute;
+    top: 10%;
+    right: 33%;
+    z-index: 1000;
+    border-radius: 20px;
+    overflow: hidden;
+
+    background: rgba(255,255,255,0.85);
+    backdrop-filter: blur(8px);
+
+    box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+}
+.form-box{
+	display: none;
+    border: 1px solid black;
+    border-radius: 20px;
+    padding: 20px;
+    width: 455px;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+.form-box.active {
+    display: flex;
+}
+.email-form-mid{
+    width: 90%;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    margin-bottom: 25px;
+}
+.form-title{
+    display: flex;
+    justify-content: center;
+    font-size: 30px;
+    position: relative;
+}
+.form-content{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 30px;
+    font-size: 17px;
+}
+.form-mid-content{
+    width: 380px;
+    position: relative;
+}
+#eye1{
+    position: absolute;
+    right: 10px;
+    top: 15px;
+}
+.register-form #eye1{
+    top: 55px;
+}
+.mid-content-title select{
+    border-radius: 5px;
+    background-color: #e2f4fd;
+    outline: none;
+}
+.form-mid-content input{
+    width: 93%;
+    border-radius: 20px;
+    padding: 15px;
+    background-color: #d9dee5;
+    border: 1px solid transparent;
+    outline: none;
+}
+.form-mid-content input:focus {
+  border-color: #00bcd4; 
+}
+.form-mid-content button{
+    border: none;
+    width: 100%;
+    border-radius: 20px;
+    padding: 15px 5px;
+    font-size: 16px;
+    margin: 15px 0;
+    background-color: #76D0F2;
+    color: white;
+    cursor: pointer;
+}
+.btn-submit {
+    opacity: 0.5;
+    cursor: not-allowed;
+    transition: 0.3s;
+}
+
+/* #btn.active {
+    background-color: #00a4e1;
+    opacity: 1;
+    cursor: pointer;
+} */
+.btn-submit.active {
+  background-color: #00a4e1;
+  opacity: 1;
+  cursor: pointer;
+}
+
+.btn-submit.active:hover {
+  background-color: #00a4e1;
+}
+.email-form-bottom{
+    width: 380px;
+    font-size: 17px;
+    padding: 30px 0;
+    border-top: 1px solid grey;
+}
+.email-form-bottom a{
+    color: black;
+}
+.login-form .form-content{
+    background-color: #f0eeeeba;
+    border-radius: 10px;
+    padding: 2px 8px;
+}
+.back{
+    position: absolute;
+    left: -75px;
+    font-size: 15px;
+    top: 10px;
+    cursor: pointer;
+}
+.login-form .email-form-bottom{
+    display: flex;
+    justify-content: center;
+}
+.forget-pass button{
+    border: none;
+    background-color: #e2f4fd;
+    font-size: 15px;
+    color: #2727ed;
+}
+.register-form .form-content{
+    background-color: #d8ffd891;
+    border-radius: 10px;
+    padding: 2px 8px;
+    color: #139113;
+}
+.emaillogin{
+	border: none;
+    background-color: #d8ffd891
+}

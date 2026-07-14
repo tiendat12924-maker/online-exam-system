@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org/">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+    <link rel="stylesheet" href="/css/index.css">
+    <link rel="stylesheet" href="/css/login.css">
+    
+    <title>Document</title>
+</head>
+<body>
+    <div class="header">
+        <div class="header-left">
+            <div class="logo" onclick="goIndex()"><img src="images/logo3.png" alt=""></div>
+            <div class="option">
+                <button type="button" class="khode">Kho đề thi</button>
+            </div>
+            <div class="option">             
+                <button type="button" class="practice"> <i class="fa-brands fa-buffer"></i> Quản lý luyện tập</button>     
+            </div>
+        </div>
+        <div class="header-right">
+	            <button type="button" onclick="goLogin()">Đăng nhập</button>
+	        </div>
+        
+    </div>
+    <div class="body">
+        <div class="banner">
+            <img src="images/banner.jpg" alt="">
+            <div class="banner-contents">
+            	<form th:action="@{/check-email}" th:if="${mode == 'email'}" method="post">  
+				      <div id="emailForm" class="form-box active">
+				    		<div class="email-form-top">
+					            <div class="form-title">
+					                <div>Đăng nhập hoặc Đăng ký</div>
+					            </div>
+					            <div class="form-content">
+					                Nhập email của bạn để tiếp tục
+					            </div>
+					        </div>
+					        <div class="email-form-mid">
+					            <div class="form-mid-content">
+					                <input type="email" name="email" th:value="${email}" placeholder="Nhập email của bạn" required>
+					            </div>
+					            <div class="form-mid-content">
+					                <button type="submit">Tiếp tục</button>
+					            </div>
+					        </div>
+					        <div class="email-form-bottom">
+					            Bằng việc Tiếp tục, bạn xác nhận đã đồng ý với <a href="#">Điều khoản sử dụng</a>và<a href="#">chính sách bảo mật</a>của DOV
+					        </div>
+					  </div>  
+				</form>     
+                <form th:action="@{/login}" th:if="${mode == 'login'}" method="post">
+                	<input type="hidden" name="email" th:value="${email}">
+				    <div id="LoginForm" class="login-form form-box">
+				        <div class="email-form-top">
+				            <div class="form-title">
+				                <div class="back" onclick="goBack()">
+				                    <i class="fa-solid fa-arrow-left"></i>
+				                </div>
+				                <div>Chào mừng trở lại</div>
+				            </div>
+				            <div class="form-content">
+				                <i class="fa-regular fa-envelope"></i>
+				                <span th:text="${email}" style="margin-left: 5px"></span>
+				            </div>
+				        </div>
+				        <div class="email-form-mid">
+				            <div class="form-mid-content password-box">
+				                <input class="input-field"  type="password" name="password" placeholder="Nhập mật khẩu" required>
+				                <span class="toggle-password">
+				                    <i id="eye1" class="fa-regular fa-eye"></i>
+				                </span>
+				            </div>
+				            <div class="form-mid-content">
+				                <button class="btn-submit" disabled type="submit">Tiếp tục</button>
+				            </div>
+				        </div>
+				        <div class="email-form-bottom">
+				            <div class="forget-pass">
+				                <button type="button">Quên mật khẩu?</button>
+				            </div>
+				        </div>
+				    </div>
+				</form>
+                <form th:action="@{/register}" th:if="${mode == 'register'}" th:object="${user}" method="post">
+				    <div id="registerForm" class="register-form form-box">
+				        <div class="email-form-top">
+				            <div class="form-title">
+				                <div class="back" onclick="goBack()">
+				                <i class="fa-solid fa-arrow-left"></i>
+				                
+				                </div>
+				                <div>Đăng ký tài khoản mới</div>
+				            </div>
+				            <div class="form-content">
+				                <i class="fa-regular fa-envelope">
+				                	<input class="emaillogin" type="email" name="email" th:value="${email}">	
+				                </i>			                
+				            </div>
+				        </div>
+				        <div class="email-form-mid">
+				            <div class="form-mid-content">
+				                <div class="mid-content-title">Họ tên</div>
+				                <input type="text" th:field="*{fullName}" placeholder="Nhập họ tên của bạn" required>
+				            </div>
+				            <div class="form-mid-content password-box">
+				                <div class="mid-content-title">Mật khẩu</div>
+				                <input class="input-field" type="password" th:field="*{password}" placeholder="Nhập mật khẩu" required>
+				            </div>
+				            <div class="form-mid-content password-box">
+				                <div class="mid-content-title">Nhập lại mật khẩu</div>
+				                <input class="input-field" type="password" name="confirmPassword" placeholder="Nhập lại mật khẩu" required>
+				            </div>			             
+				            <div class="form-mid-content">
+				            <p style="color:red;" th:if="${error}" th:text="${error}"></p>
+				                <button class="btn-submit" type="submit">Tiếp tục</button>
+				            </div>
+				        </div>
+				    </div>
+				</form>
+            </div>
+        </div>
+    </div>
+    <div class="footer">
+        <img src="images/banner-foter.png" alt="">
+        <div class="contact">
+            <div class="contact-left">
+                <div class="contact-left-logo">
+                    <img src="images/logochim.jpg" alt="">
+                </div>
+                <div class="contact-left-content">
+                    Luyện thi tốt nghiệp THPT và ĐGNL miễn phí
+                    được phát triển bởi DOL ENGLISH
+                    dành tặng cho học sinh toàn quốc.
+                </div>
+            </div>
+            <div class="contact-right">
+                <div class="contact-right-content">
+                    <div class="contact-right-title">KHO ĐỀ THI</div>
+                    <div class="contact-right-more">
+                        <div>Luyện thi THPT</div>
+                        <div class="angle-right"><i class="fa-solid fa-angle-right"></i></div>
+                    </div>
+                    <div class="contact-right-more">
+                        <div>Luyện thi ĐGNL</div>
+                        <div class="angle-right"><i class="fa-solid fa-angle-right"></i></div>
+                    </div>
+                </div>
+                <div class="contact-right-content">
+                    <div class="contact-right-title">Về DOV THPT</div>
+                    <div class="contact-right-more">
+                        <div>Giới thiệu</div>
+                        <div class="angle-right"><i class="fa-solid fa-angle-right"></i></div>
+                    </div>
+                    <div class="contact-right-more">
+                        <div>Chính sách bảo mật</div>
+                        <div class="angle-right"><i class="fa-solid fa-angle-right"></i></div>
+                    </div>
+                    <div class="contact-right-more">
+                        <div>Điều khoản sử dụng</div>
+                        <div class="angle-right"><i class="fa-solid fa-angle-right"></i></div>
+                    </div>
+                    <div class="contact-right-more">
+                        <div>Liên hệ</div>
+                        <div class="angle-right"><i class="fa-solid fa-angle-right"></i></div>
+                    </div>
+                </div>                
+            </div>
+        </div>
+    </div>
+    <script th:src="@{js/login.js}"></script>
+</body>
+</html>

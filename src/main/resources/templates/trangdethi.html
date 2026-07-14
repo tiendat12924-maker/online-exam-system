@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+    <link rel="stylesheet" href="/css/index.css">
+    <link rel="stylesheet" href="/css/trangdethi.css">
+    <title>Document</title>
+</head>
+<body>
+    <div class="overlay"></div>
+    <div class="khodethi">
+                    <div class="khodethi-left">
+                        <div class="khode-left-top">
+                            Ôn thi tốt nghiệp THPT
+                            <i class="fa-solid fa-chevron-right" style="font-size: 10px;"></i>
+                        </div>
+                        <div class="khode-left-top khode-left-bottom">
+                            ĐGNL & ĐGTD
+                            <i class="fa-solid fa-chevron-right" style="font-size: 10px;"></i>
+                        </div>
+                    </div>
+                    <div class="khodethi-right">
+                        <div class="onthithpt active" >
+                            <div class="khode-right-top">
+                                <div class="khode-right-logo">
+                                    <img src="images/k12.png" alt="">
+                                </div>
+                                <div class="khode-right-name">
+                                    Ôn thi tốt nghiệp THPT
+                                    <i class="fa-solid fa-chevron-right"></i>
+                                </div>
+                            </div>
+                            <div class="khode-right-bottom">
+                                <div class="khode-bottom-title">
+                                    LUYỆN TẬP KÈM LỜI GIẢI
+                                </div>
+                                <div class="khode-bottom-content">
+		                           <div class="bottom-content" th:each="subject : ${subjects}">
+		                                <a th:href="@{/trangdethi(subjectId=${subject.id})}" class="khode-link">
+			                                <div class="khode-content">
+			                                <div class="khode-content-icon"><i th:class="${subject.icon}"></i></div>
+			                                <div class="khode-content-name" th:text="${subject.name}"></div>
+			                                <div class="khode-angle-right"><i class="fa-solid fa-angle-right"></i></div>
+			                                </div>
+			                                <div class="number-test">120+ bài test</div>
+			                            </a>
+		                          </div>
+		                      </div>
+                            </div>
+                        </div>
+                        <div class="onthidgnl" >
+                            <div class="khode-right-top">
+                                <div class="khode-right-logo">
+                                    <img src="images/dgnl.jpg" alt="">
+                                </div>
+                                <div class="khode-right-name">
+                                    ĐGNL & ĐGTD
+                                    <i class="fa-solid fa-chevron-right"></i>
+                                </div>
+                            </div>
+                            <div class="khode-right-bottom">
+                                <div class="khode-bottom-title">
+                                    ÔN THI ĐGNL & ĐGTD
+                                </div>
+                                <div class="khode-bottom-content">
+                                    <div class="bottom-content">
+                                        <div class="khode-content">
+                                            <div class="khode-content-icon">
+                                                <img src="images/dhqghn.jpg" alt="">
+                                            </div>
+                                            <div class="khode-content-name">ĐH Quốc gia Hà Nội</div>
+                                            <div class="khode-angle-right"><i class="fa-solid fa-angle-right"></i></div>
+                                        </div>
+                                        <div class="number-test" style="margin-left: 40px;">120+ bài test</div>
+                                    </div>
+                                    <div class="bottom-content">
+                                            <div class="khode-content">
+                                            <div class="khode-content-icon">
+                                                <img src="images/hcm.jpg" alt="">
+                                            </div>
+                                            <div class="khode-content-name">ĐH Quốc gia Hồ Chí Minh </div>
+                                            <div class="khode-angle-right"><i class="fa-solid fa-angle-right"></i></div>
+                                        </div>
+                                        <div class="number-test" style="margin-left: 40px;">120+ bài test</div>
+                                    </div>
+                                    <div class="bottom-content">
+                                        <div class="khode-content">
+                                            <div class="khode-content-icon">
+                                            	<img src="images/dhbk.jpg" alt="">
+                                            </div>
+                                            <div class="khode-content-name">ĐH Bách Khoa Hà Nội</div>
+                                            <div class="khode-angle-right"><i class="fa-solid fa-angle-right"></i></div>
+                                        </div>
+                                        <div class="number-test" style="margin-left: 40px;">120+ bài test</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+    </div>
+    <div class="header">
+        <div class="header-left">
+            <div class="logo" onclick="goIndex()"><img src="images/logo3.png" alt=""></div>
+            <div class="option">
+                <button type="button" class="khode">Kho đề thi</button>
+            </div>
+            <div class="option">             
+                <button type="button" class="practice"> <i class="fa-brands fa-buffer"></i> Quản lý luyện tập</button>     
+            </div>
+        </div>
+        <div class="header-right">
+			<button type="button"  th:if="${session.user == null}" onclick="window.location.href='/login'">  Đăng nhập
+			</button>
+			<button type="button" th:if="${session.user != null}" th:text="${session.user.fullName}" onclick="handleLogout()">
+			</button>
+		</div>
+    </div>
+    <div class="body">
+        <div class="body-top">
+            <div class="body-top-left">
+                <div class="dropdown">
+                    <div class="selected" onclick="toggleMenu()">
+                        <img id="logoImg" src="images/logothpt.png">
+                    </div>
+                    <div class="menu" id="menu">
+                        <label class="item">
+                            <input type="radio" name="logo" hidden
+                                onclick="selectOption('images/logothpt.png', this)">
+                            <img src="images/logothpt.png">
+                        </label>
+                        <label class="item">
+                            <input type="radio" name="logo" hidden
+                                onclick="selectOption('images/logodgnl.png', this)">
+                            <img src="images/logodgnl.png">
+                        </label>
+                    </div>
+                </div>
+            </div>
+            <div class="body-top-right">
+			    <div class="body-top-right-content"
+			         th:each="subject : ${subjects}"		         
+			         th:classappend="${subject.id == activeSubjectId} ? 'click' : ''"			
+			         th:onclick="'window.location.href=\'/trangdethi?subjectId=' + ${subject.id} + '\''">			
+			        <i th:class="${subject.icon}"></i>
+			        <span th:text="${subject.name}"></span>		
+			    </div>		
+			</div>
+        </div>
+        <div class="body-mid">
+            <div class="body-mid-left">
+                <div class="body-mid-left-icon">
+                    <i th:class="${subject.icon}"></i>
+                </div>
+                <div class="body-mid-left-title" th:text="'Luyện Thi Tốt Nghiệp THPT Môn ' + ${subject.name}">
+                    
+                </div>
+                <div class="body-mid-left-content" th:text="${subject.description}">
+                   
+                </div>
+                <div class="body-mid-left-attent attent">
+                    <div class="attent-content">
+                        <div class="contents"><span>NỀN TẢNG</span></div>
+                        <div class="contents" style="color: rgb(108, 107, 107); font-size: 20px;"><span>TOP 1</span></div>
+                        <div class="contents"><span>LUYỆN THI ONLINE</span></div>
+                    </div>
+                    <div class="attent-content center">
+                        <div class="contents"><span>KHO ĐỀ</span></div>
+                        <div class="contents" style="color: rgb(108, 107, 107); font-size: 20px;"><span>41</span></div>
+                        <div class="contents"><span>BÀI TEST ONLINE</span></div>
+                    </div>
+                    <div class="attent-content ">
+                        <div class="contents"><span>TRẢI NGHIỆM</span></div>
+                        <div class="contents attent-thpt"><img src="images/attent-thpt.jpg" alt=""></div>
+                        <div class="contents"><span>HƠN THI THẬT</span></div>
+                    </div>
+                </div>
+            </div>
+            <div class="body-mid-right">
+                <div class="body-mid-right-top">
+                    Cộng đồng
+                </div>
+                <div class="body-mid-right-bottom">
+                    <div class="body-mid-right-bottom-content">
+                        <i class="fa-solid fa-book-open"></i>
+                        <span style="font-size: 19px;color: #0e0e0ec2;font-weight: 600;">1,234</span>
+                        lượt xem bài
+                    </div>
+                    <div class="body-mid-right-bottom-content">
+                        <i class="fa-regular fa-clock"></i>
+                        <span style="font-size: 19px;color: #0e0e0ec2;font-weight: 600;">12,345</span>
+                        phút xem bài
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="body-bottom">
+            <div class="form-search">
+                <div class="search-wrapper">
+                <div class="search-box">
+                    <i class="fa-solid fa-magnifying-glass"></i>
+                    <input type="text" placeholder="Tìm kiếm bài tập..." />
+                </div>
+                <div class="filter-box">
+                    <select>
+                        <option>Mới nhất</option>
+                        <option>Cũ nhất</option>
+                        <option>Phổ biến</option>
+                    </select>
+                </div>
+            </div>
+            </div>
+            <div class="form-tests">
+                <div class="exam-card" th:each="test : ${tests}">
+				    <div class="exam-thumb">
+				        <img th:src="@{${test.image}}" alt="exam">
+				    </div>
+				    <div class="exam-content">
+				        <div class="exam-type">
+				            <span th:text="${test.type}"></span> · 
+				            <span th:text="${test.year}"></span>
+				        </div>
+				        <div class="exam-title"
+				             th:text="${test.title}">
+				        </div>
+				        <div class="exam-stats">
+				            <div><i class="fa-regular fa-eye"></i> 2.4K</div>
+                            <div><i class="fa-regular fa-heart"></i> 72</div>
+				        </div>
+				        <div class="exam-actions">
+				            <a th:href="@{/chitietde/{id}(id=${test.id})}"
+							   class="btn-primary">
+							    Làm bài
+							</a>
+				        </div>		
+				    </div>
+				</div>
+            </div>
+        </div>
+    </div>
+    <div class="footer">
+        <img src="images/banner-foter.png" alt="">
+        <div class="contact">
+            <div class="contact-left">
+                <div class="contact-left-logo">
+                    <img src="images/logochim.jpg" alt="">
+                </div>
+                <div class="contact-left-content">
+                    Luyện thi tốt nghiệp THPT và ĐGNL miễn phí
+                    được phát triển bởi DOL ENGLISH
+                    dành tặng cho học sinh toàn quốc.
+                </div>
+            </div>
+            <div class="contact-right">
+                <div class="contact-right-content">
+                    <div class="contact-right-title">KHO ĐỀ THI</div>
+                    <div class="contact-right-more">
+                        <div>Luyện thi THPT</div>
+                        <div class="angle-right"><i class="fa-solid fa-angle-right"></i></div>
+                    </div>
+                    <div class="contact-right-more">
+                        <div>Luyện thi ĐGNL</div>
+                        <div class="angle-right"><i class="fa-solid fa-angle-right"></i></div>
+                    </div>
+                </div>
+                <div class="contact-right-content">
+                    <div class="contact-right-title">Về DOV THPT</div>
+                    <div class="contact-right-more">
+                        <div>Giới thiệu</div>
+                        <div class="angle-right"><i class="fa-solid fa-angle-right"></i></div>
+                    </div>
+                    <div class="contact-right-more">
+                        <div>Chính sách bảo mật</div>
+                        <div class="angle-right"><i class="fa-solid fa-angle-right"></i></div>
+                    </div>
+                    <div class="contact-right-more">
+                        <div>Điều khoản sử dụng</div>
+                        <div class="angle-right"><i class="fa-solid fa-angle-right"></i></div>
+                    </div>
+                    <div class="contact-right-more">
+                        <div>Liên hệ</div>
+                        <div class="angle-right"><i class="fa-solid fa-angle-right"></i></div>
+                    </div>
+                </div>                
+            </div>
+        </div>
+    </div>
+    <script th:src="@{js/trangdethi.js}"></script>
+</body>
+</html>

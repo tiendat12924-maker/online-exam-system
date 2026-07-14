@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tạo đề thi</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+    <link rel="stylesheet" href="/css/uploadtest.css">
+</head>
+<body>
+<div class="exam-container">
+    <div class="left-content">
+        <div class="step">
+            <div class="step-item active">
+                <div class="step-number">
+                    1
+                </div>
+                <div>
+                    <h4>Chọn phương thức</h4>
+                    <p>Chọn cách thêm đề thi</p>
+                </div>
+            </div>
+            <div class="step-item">
+                <div class="step-number">
+                    2
+                </div>
+                <div>
+                    <h4>Nhập dữ liệu</h4>
+                    <p>Điền thông tin và câu hỏi</p>
+                </div>
+            </div>
+        </div>
+        <h2 class="section-title">
+            Chọn phương thức tạo đề
+        </h2>
+        <div class="method">
+            <div class="method-card active">
+                <div class="method-icon">
+                    <i class="fa-solid fa-pen"></i>
+                </div>
+                <div>
+                    <h3>Nhập thủ công</h3>
+                    <p>
+                        Nhập thông tin đề thi và từng câu hỏi bằng tay
+                    </p>
+                    <ul>
+                        <li>
+                            <i class="fa-solid fa-check"></i>
+                            Phù hợp với đề ít câu hỏi
+                        </li>
+                        <li>
+                            <i class="fa-solid fa-check"></i>
+                            Kiểm soát và chỉnh sửa dễ dàng
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <div class="method-card">
+                <div class="method-icon green">
+                    <i class="fa-solid fa-file-excel"></i>
+                </div>
+                <div>
+                    <h3>Import từ Excel</h3>
+                    <p>
+                        Tải lên file Excel theo mẫu để hệ thống tự động tạo đề
+                    </p>
+                    <ul>
+                        <li>
+                            <i class="fa-solid fa-check"></i>
+                            Phù hợp với nhiều câu hỏi
+                        </li>
+                        <li>
+                            <i class="fa-solid fa-check"></i>
+                            Tiết kiệm thời gian nhập liệu
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="form-card">
+            <h2>
+                Thông tin đề thi
+            </h2>
+            <form th:action="@{/uploadtest}" method="post">
+				<div class="form-grid">
+				    <div class="form-group">
+				        <label>Tên đề thi *</label>
+				        <input type="text" name="title" required>
+				    </div>
+				    <div class="form-group">
+				        <label>Môn thi *</label>
+				        <select name="subject">
+				            <option value="1">Tiếng Anh</option>
+				            <option value="2">Toán</option>
+				            <option value="3">Vật lý</option>
+				            <option value="4">Hóa học</option>
+				            <option value="5">Sinh học</option>
+				        </select>
+				    </div>
+				    <div class="form-group">
+				        <label>Thời gian làm bài</label>
+				        <input type="number" name="duration" placeholder="VD:45">
+				    </div>
+				    <div class="form-group">
+				        <label>Độ khó</label>
+				        <select name="difficulty">
+				            <option value="EASY">EASY</option>
+				            <option value="MEDIUM">MEDIUM</option>
+				            <option value="HARD">HARD</option>
+				        </select>		
+				    </div>									
+				</div>
+	            <div class="button-group">
+	                <button class="btn-cancel">
+	                    Huỷ
+	                </button>
+	                <button type="submit" class="btn-next">
+	                    Tiếp tục
+	                    <i class="fa-solid fa-arrow-right"></i>
+	                </button>    
+	            </div>
+	        </form>
+        </div>
+    </div>
+    <div class="right-content">
+        <h2>
+            Hướng dẫn Import Excel
+        </h2>
+        <div class="guide-item">
+            <div class="guide-number">
+                1
+            </div>
+            <div>
+                <h4>Tải file mẫu</h4>
+                <p>
+                    Tải file Excel mẫu theo cấu trúc chuẩn
+                </p>
+                <button class="download">
+                    <i class="fa-solid fa-file-excel"></i>
+                    Tải file mẫu Excel
+                </button>
+            </div>
+        </div>
+        <div class="guide-item">
+            <div class="guide-number">
+                2
+            </div>
+            <div>
+                <h4>Chuẩn bị dữ liệu</h4>
+                <ul>
+                    <li>Điền thông tin đề thi</li>
+                    <li>Nhập câu hỏi</li>
+                    <li>Đáp án đúng đánh dấu là "1"</li>
+                </ul>
+            </div>
+        </div>
+        <div class="guide-item">
+            <div class="guide-number">
+                3
+            </div>
+            <div>
+                <h4>Import file</h4>
+                <p>
+                    Tải lên file Excel của bạn
+                </p>
+                <button class="upload">
+                    <i class="fa-solid fa-upload"></i>
+                    Chọn file Excel
+                </button>
+                <span class="file-info">
+                    Định dạng: .xlsx, .xls <br>
+                    Kích thước tối đa: 10MB
+                </span>
+            </div>
+        </div>
+        <div class="note">
+            <h4>Lưu ý quan trọng</h4>
+            <ul>
+                <li>File Excel phải đúng định dạng mẫu.</li>
+                <li>Kiểm tra dữ liệu trước khi import.</li>
+                <li>Hệ thống sẽ báo lỗi nếu dữ liệu không hợp lệ.</li>
+            </ul>
+        </div>
+    </div>
+</div>
+</body>
+</html>

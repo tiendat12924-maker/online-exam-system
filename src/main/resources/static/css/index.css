@@ -1,0 +1,480 @@
+*{
+    margin: 0;
+    padding: 0;
+}
+body{
+    width: 100%; 
+}
+.header{
+    position: fixed;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    border-bottom: 1px solid #d2d0d08f;
+    box-shadow: 0 1px 6px rgba(0,0,0,0.12);
+    background-color: white;
+    z-index: 100;
+}
+.overlay {
+    position: fixed;
+    top: 65px;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.6); /* độ mờ */
+    z-index: 999;
+}
+.header-left{
+    display: flex;
+    align-items: center;
+    padding-left: 25px;
+}
+.logo img{
+    width: 200px;
+    height: 60px;
+    
+}
+.header-right{
+    padding-right: 40px;
+}
+.option{
+    border-right: 1px solid #d2d0d08f;
+    font-size: 15px; 
+}
+.option button:hover{
+    background-color: #ececec;
+}
+.practice:hover{
+    border-radius: 20px;
+}
+.option button{
+    padding: 10px;
+    font-weight: 500;
+    background-color: white;
+    margin-right: 10px;
+    font-size: 15px;
+}
+.khode{
+    border-radius: 10px;
+    border: 1px solid #bab6b68f;
+    position: relative;
+}
+.practice{
+    border: none;
+    margin-left: 15px;
+}
+.header-right button{
+    padding: 10px 15px;
+    background-color: #76D0F2;
+    border-radius: 10px;
+    color: white;
+    border: none;
+    font-size: 15px;
+    font-weight: 600;
+}
+.body{
+    padding-top: 70px;
+    padding-bottom: 200px;
+}
+.title-content{
+    justify-content: center;
+    display: flex;
+    font-size: 60px;
+    font-weight: 700;
+}
+.attempts{
+    font-size: 17px;
+    font-weight: 200;
+    color: rgb(98 97 97);
+    border: 1px solid grey;
+    border-radius: 30px;
+    width: 180px;
+    display: flex;
+    justify-content: center;
+    margin-bottom: 30px;
+}
+.title1{
+    color: rgb(68, 63, 63);
+}
+.title2{
+    color: #76D0F2;
+    background-color: #cef0fd6e;
+    margin-top: 10px;
+}
+.attent{
+    display: flex;
+    justify-content: center;
+}
+.attent-content{
+    padding: 0 15px;
+    margin: 30px 0;
+}
+.center{
+    border: 1px solid #cfc9c9;
+    border-top: none;
+    border-bottom: none;
+}
+.contents{
+    display: flex;
+    justify-content: center;
+    margin: 5px 0;
+    font-size: 14px;
+    color: grey;
+}
+.banner{
+    position: relative;
+}
+.banner img{
+    width: 100%;
+}
+.content-logo img{
+    width: 88%;
+    height: 88%;
+}
+.content-logo{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.main{
+    display: flex;
+    justify-content: center;
+    position: absolute;
+    top: 100px;
+}
+.k12 img{
+    border-radius: 7px;
+    width: 65px;
+    height: 35px;
+}
+.k12{
+    margin-right: 30px;
+    display: flex;
+}
+.container-title{
+    display: flex;
+    align-items: center;
+    font-size: 25px;
+    margin: 20px 0;
+    padding: 10px;
+    cursor: pointer;
+    width: fit-content;
+}
+.container-title:hover{
+    background-color: #f3f3f3a1;
+    border-radius: 20px;
+}
+.container {
+    width: 80%;
+    margin: auto;
+    display: flex;
+    position: relative;
+    background: #fff;
+    border-radius: 32px;
+    padding: 28px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.05);
+}
+.picture{
+    position: absolute;
+    top: -50px;
+    right: -35px;
+}
+.picture img{
+    width: 145px;
+    height: 145px;
+}
+.container::before {
+    content: "";
+    position: absolute;
+    inset: 12px;
+    border: 1px solid #d3d4d6;
+    border-radius: 24px;
+    pointer-events: none;
+}
+
+.container-left,.container-right{
+    width: 50%;
+    position: relative;
+    padding: 0 20px;
+
+}
+.container-left::after {
+    content: "";
+    position: absolute;
+    top: -16px;
+    bottom: -16px;
+    right: 0px;
+    width: 1px;
+    background: rgb(211, 212, 214);
+}
+.container-contents{
+    width: 100%;
+    display: flex;
+    flex-wrap: wrap;
+}
+.content-icon{
+    border: 1px solid #5b5858;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 7px;
+    color: #5b5858;
+    margin: 10px 20px;
+}
+.container-content{
+    cursor: pointer;
+    width: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-size: 18px;
+    margin: 3px 0;
+}
+.container-content:hover{
+    background-color: #f3f3f3a1;
+    border-radius: 20px;
+}
+.container-content:hover .angle-right{
+    display: none;
+}
+.angle-right{
+    font-size: 13px;
+}
+.outstanding{
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+.outstanding-title{
+    font-size: 50px;
+    margin: 90px 0;
+}
+.outstanding-contents{
+    display: flex;
+    width: 80%;
+    align-items: center;
+}
+.content-top-title{
+    font-size: 23px;
+    font-weight: 600;
+    color: #232222c9;
+    margin-bottom: 15px;
+}
+.outstanding-content-top{
+    border: 1px solid rgba(199, 199, 199, 0.358);
+    border-radius: 15px;
+    padding: 25px;
+    width: fit-content;
+    margin-bottom: 20px;
+}
+#boy-video{
+    border-radius: 25px;
+    margin: 0 80px;
+}
+.footer{
+    position: relative;
+}
+.footer img{
+    width: 100%;
+}
+.contact{
+    padding: 0px 190px;
+    display: flex;
+    justify-content: space-between;
+    width: 75%;
+    position: absolute;
+    top: 70px;
+    color: white;
+}
+.contact-left,.contact-right{
+    width: 30%;
+}
+.contact-left-logo{
+    margin-bottom: 30px;
+}
+.contact-left-content{
+    font-size: 17px;
+}
+.contact-left-logo img{
+    width: 50px;
+    height: 50px;
+}
+.contact-right{
+    display: flex;
+}
+.contact-right-content{
+    width: 47%;
+    margin: 0 5px;
+}
+.contact-right-title{
+    font-size: 16px;
+    color: #e0dcdce8;
+    margin-bottom: 10px;
+    padding-left: 5px;
+}
+.contact-right-more{
+    font-size: 17px;
+    padding: 10px 5px;
+    margin: 10px 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-right: 6px;
+    cursor: pointer;
+}
+.contact-right-more:hover{
+    background-color: #ffffff2b;
+    border-radius: 10px;
+    color: #6464f2;
+}
+.khodethi{
+    position: fixed;
+    top: 10%;
+    right: 10%;
+    display: flex;
+    width: 78%;
+    padding: 15px;
+    border-radius: 25px;
+    background-color: white;
+    z-index: 1000;
+}
+.onthithpt,
+.onthidgnl {
+    display: none;
+}
+
+.onthithpt.active,
+.onthidgnl.active {
+    display: block;
+}
+.onthithpt,
+.onthidgnl {
+    transition: 0.3s;
+    height: 495px;
+}
+.khodethi-left{
+    background-color: rgb(249 250 251);
+    width: 20%;
+    padding: 10px;
+    border-radius: 25px;
+    margin-right: 10px;
+}
+.khode-left-top{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 5px 0;
+    cursor: pointer;
+    padding: 15px 20px;
+    border-radius: 20px;
+    transition: all 0.3s ease;
+}
+.khode-left-top:hover{
+    background-color: white;
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+}
+
+.khodethi-right{
+    width: 80%;
+    padding: 15px;
+}
+.khode-right-top{
+    display: flex;
+    padding: 7px;
+    width: 290px;
+    border-radius: 20px;
+    align-items: center;
+    color: #1c1212;
+    cursor: pointer;
+    transition: 0.3s;
+    margin-bottom: 5px;
+}
+.khode-right-bottom{
+    border-bottom: 1px solid black;
+    padding-bottom: 25px;
+}
+.khode-right-top:hover{
+    background-color: #e1dbdb63;
+}
+.khode-right-logo img{
+    width: 80px;
+    height: 40px;
+    border-radius: 10px;
+}
+.khode-right-name{
+    font-size: 18px;
+    font-weight: 600;
+    margin-left: 10px;
+}
+.khode-right-name i{
+    font-size: 13px;
+    
+}
+.khode-bottom-title{
+    margin: 15px 0;
+    font-size: 13px;
+    color: #8c99a6;
+}
+.khode-bottom-content{
+    display: flex;
+    flex-wrap: wrap;
+}
+.bottom-content{
+    width: 330px;
+    padding: 10px;
+    border-radius: 15px;
+    margin: 10px;
+    cursor: pointer;
+    transition: 0.3s;
+}
+.bottom-content:hover{
+    background-color: #e1dbdb63;
+}
+.khode-content{
+    display: flex;
+    font-size: 18px;
+    align-items: center;
+}
+.khode-content-icon img{
+    width: 30px;
+    height: 20px;
+}
+.number-test{
+    margin-left: 25px;
+}
+.khode-content-name{
+    margin: 0 10px;
+}
+.khode-angle-right{
+    font-size: 13px;
+    margin-left: 10px;
+    margin-top: 5px;
+}
+.overlay,
+.khodethi {
+  opacity: 0;
+  visibility: hidden;
+  transition: 0.3s;
+}
+
+.overlay.active,
+.khodethi.active {
+  opacity: 1;
+  visibility: visible;
+}
+.khode-link{
+	color: black;
+	text-decoration: none;
+}
+.khode-link2{
+	color: black;
+	text-decoration: none;
+	display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+}

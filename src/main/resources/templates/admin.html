@@ -1,0 +1,689 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Admin Dashboard</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+    <link rel="stylesheet" href="/css/admin.css">
+    <link rel="stylesheet" href="/css/test.css">
+</head>
+<body>
+
+<div class="container">
+    <aside class="sidebar">
+        <h2 class="logo">Admin DOV</h2>
+
+        <ul class="menu">
+            <li class="menu-item active" onclick="showPage('home-page', this)">
+		        <i class="fa-solid fa-house"></i>
+		        Trang chủ
+		    </li>
+            <div class="manage">
+		        <span style="font-size:12px;">QUẢN LÝ</span>
+		        <li class="menu-item" onclick="showPage('user-page', this)">
+		            <i class="fa-solid fa-user-group"></i>
+		            Quản lý User
+		        </li>
+		        <li class="menu-item" onclick="showPage('exam-page', this)">
+		            <i class="fa-regular fa-file-lines"></i>
+		            Quản lý Đề
+		        </li>
+		        <li class="menu-item" onclick="showPage('subject-page', this)">
+		            <i class="fa-regular fa-file-lines"></i>
+		            Quản lý Môn học
+		        </li>
+		    </div>
+        </ul>
+        <div class="logout">
+            <button type="button" onclick="handleLogout()">
+                <i class="fa-solid fa-right-from-bracket" style="margin-right: 7px;"></i>
+                Đăng xuất
+            </button>
+        </div>
+    </aside>
+    <div class="main">
+        <div class="page home-page" >
+            <div class="header">
+                <span style="font-size: 18px; font-weight: 600;">Trang chủ</span>
+            </div>
+            <div class="stats">
+                <div class="card">
+                    <div class="card-icon total-user">
+                        <i class="fa-solid fa-user-group"></i>
+                    </div>
+                    <div class="card-content">
+                        <span>Tổng số user</span>
+                        <h2>125</h2>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card-icon total-exam">
+                        <i class="fa-regular fa-file-lines"></i>
+                    </div>
+                    <div class="card-content">
+                        <span>Tổng số đề thi</span>    
+                        <h2>38</h2>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card-icon total-attemps">
+                        <i class="fa-solid fa-clipboard-check"></i>
+                    </div>
+                    <div class="card-content">
+                        <span>Tổng lượt làm bài</span>
+                        <h2>1248</h2>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card-icon total-work">
+                        <i class="fa-solid fa-chart-line"></i>
+                    </div>
+                    <div class="card-content">
+                        <span>Tổng bài làm</span>
+                        <h2>892</h2>
+                    </div>
+                </div>
+            </div>
+            <div class="content">
+                <div class="box">
+                    <div class="box-header">
+                        <h3>Quản lý User</h3>
+                        <button>Xem tất cả</button>
+                    </div>
+                    <table>
+                        <thead>
+                        <tr>
+                            <th>Email</th>
+                            <th>Ngày đăng ký</th>
+                            <th>Số bài làm</th>
+                            <th></th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr>
+                            <td>user1@gmail.com</td>
+                            <td>12/05/2024</td>
+                            <td>15</td>
+                            <td><button class="btn">Chi tiết</button></td>
+                        </tr>
+                        <tr>
+                            <td>user2@gmail.com</td>
+                            <td>18/05/2024</td>
+                            <td>8</td>
+                            <td><button class="btn">Chi tiết</button></td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="box">
+                    <div class="box-header">
+                        <h3>Quản lý Đề</h3>
+                        <button class="add" onclick="location.href='/uploadtest'"> + Tạo đề</button>
+                    </div>
+                    <table>
+                        <thead>
+                        <tr>
+                            <th>Tên đề</th>
+                            <th>Số câu</th>
+                            <th>Lượt làm</th>
+                            <th></th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr>
+                            <td>Toán cơ bản</td>
+                            <td>20</td>
+                            <td>245</td>
+                            <td><button class="btn">Chi tiết</button></td>
+                        </tr>
+                        <tr>
+                            <td>Lập trình C</td>
+                            <td>25</td>
+                            <td>198</td>
+                            <td><button class="btn">Chi tiết</button></td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div class="page user-page" >
+            <div class="header">
+                <span style="font-size: 18px; font-weight: 600;">Quản lý User</span>
+            </div>
+            <div class="manage-user-test" >
+                <div class="manage-user-test-left">
+                    <div class="stats">
+                        <div class="card">
+                            <div class="card-icon total-user">
+                                <i class="fa-solid fa-user-group"></i>
+                            </div>
+                            <div class="card-content">
+                                <span>Tổng số user</span>
+                                <h2>125</h2>
+                            </div>
+                        </div>
+                        
+                        <div class="card">
+                            <div class="card-icon total-attemps">
+                                <i class="fa-solid fa-clipboard-check"></i>
+                            </div>
+                            <div class="card-content">
+                                <span>Tổng lượt làm bài</span>
+                                <h2>1248</h2>
+                            </div>
+                        </div>
+                        <div class="card">
+                            <div class="card-icon total-work">
+                                <i class="fa-solid fa-chart-line"></i>
+                            </div>
+                            <div class="card-content">
+                                <span>Tổng bài làm</span>
+                                <h2>892</h2>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="user-section">
+                        <div class="user-header">
+                            <h2>Danh sách User</h2>
+                        </div>
+                        <div class="user-filter">
+                            <input type="text" placeholder="Tìm kiếm user (email, tên...)">
+                            <select>
+                                <option>Tất cả trạng thái</option>
+                                <option>Hoạt động</option>
+                                <option>Không hoạt động</option>
+                            </select>
+                            <input type="date">
+                            <button class="btn">Lọc</button>
+                        </div>
+                        <table class="user-table">
+                            <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>User</th>
+                                    <th>Ngày đăng ký</th>
+                                    <th>Trạng thái</th>
+                                    <th>Số bài đã làm</th>
+                                    <th>Hành động</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <!-- sau này thay bằng th:each -->
+                                <tr>
+                                    <td>1</td>
+                                    <td class="user-info">
+                                        <img src="https://i.pravatar.cc/40" alt="">
+                                        <div>
+                                            <p class="email">nguyenvana@gmail.com</p>
+                                            <span class="name">Nguyễn Văn A</span>
+                                        </div>
+                                    </td>
+                                    <td>12/05/2024</td>
+                                    <td><span class="status active">Hoạt động</span></td>
+                                    <td>15</td>
+                                    <td class="actions">
+                                        <button class="icon-btn">👁</button>
+                                        <button class="icon-btn"><i class="fa-solid fa-chart-simple"></i></button>
+                                        <button class="icon-btn">⋮</button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <div class="pagination">
+                            <button>&lt;</button>
+                            <button class="active">1</button>
+                            <button>2</button>
+                            <button>3</button>
+                            <button>&gt;</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="manage-user-right">
+                    <div class="user-detail">
+                        <div class="detail-header">
+                            <h3>Thông tin user</h3>
+                            <span class="close">×</span>
+                        </div>
+                        <div class="user-profile">
+                            <div class="avatar">👤</div>
+                            <div>
+                                <p class="email">nguyenvana@gmail.com</p>
+                                <span class="name">Nguyễn Văn A</span>
+                                <div class="status active">Hoạt động</div>
+                            </div>
+                        </div>
+                        <div class="info-list">
+                            <div class="info-item">
+                                <span><i class="fa-regular fa-calendar-days"></i> Ngày đăng ký</span>
+                                <p>12/05/2024 10:30</p>
+                            </div>
+                            <div class="info-item">
+                                <span><i class="fa-regular fa-envelope"></i> Email</span>
+                                <p>nguyenvana@gmail.com</p>
+                            </div>
+                            <div class="info-item">
+                                <span><i class="fa-solid fa-chart-simple"></i> Tổng số bài đã làm</span>
+                                <p>15</p>
+                            </div>
+                            <div class="info-item">
+                                <span><i class="fa-regular fa-clock"></i>Lần đăng nhập cuối</span>
+                                <p>02/06/2024 21:15</p>
+                            </div>
+                        </div>
+                        <div class="tabs">
+                            <span class="active">Bài đã làm</span>
+                            <span>Điểm theo đề</span>
+                            <span>Thông tin khác</span>
+                        </div>
+                        <div class="history">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>Đề thi</th>
+                                        <th>Điểm</th>
+                                        <th>Thời gian</th>
+                                        <th>Ngày làm</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>Đề thi Toán</td>
+                                        <td>8.5</td>
+                                        <td>45 phút</td>
+                                        <td>01/06/2024</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Đề thi Lập trình C</td>
+                                        <td>7.0</td>
+                                        <td>60 phút</td>
+                                        <td>31/05/2024</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="detail-footer">
+                            <button>Xem tất cả lịch sử</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="page exam-page" >
+            <div class="header">
+                <span style="font-size: 18px; font-weight: 600;">Quản lý Đề</span>
+            </div>
+            <div class="manage-user-test">
+                <div class="manage-user-test-left">
+                    <div class="stats">
+                        <div class="card">
+                            <div class="card-icon total-user">
+                                <i class="fa-regular fa-file-lines"></i>                            
+                            </div>
+                            <div class="card-content">
+                                <span>Tổng số đề</span>
+                                <h3>125</h3>
+                            </div>
+                        </div>
+                        <div class="card">
+                            <div class="card-icon total-exam">
+                                <i class="fa-solid fa-user-group"></i>
+                            </div>
+                            <div class="card-content">
+                                <span>Tổng lượt làm bài</span>    
+                                <h3>380</h3>
+                            </div>
+                        </div>
+                        <div class="card">
+                            <div class="card-icon total-attemps">
+                                <i class="fa-solid fa-clipboard-check"></i>
+                            </div>
+                            <div class="card-content">
+                                <span>Tổng bài làm</span>
+                                <h3>1248</h3>
+                            </div>
+                        </div>
+                        <div class="card">
+                            <div class="card-icon total-work">
+                                <i class="fa-solid fa-chart-line"></i>
+                            </div>
+                            <div class="card-content">
+                                <span>Đề được làm nhiều nhất</span>
+                                <span style="font-size: 16px;font-weight: 600;">Toán - Cơ bản</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="cards">
+					    <div class="card-header">
+					        <h3>Danh sách đề</h3>					
+					        <div class="actions">
+					            <input type="text" placeholder="Tìm kiếm đề thi...">					
+					            <select>
+					                <option value="">Danh mục: Tất cả</option>
+					                <option value="toan">Toán</option>
+					                <option value="van">Văn</option>
+					                <option value="anh">Anh</option>
+					                <option value="sinh">Sinh</option>
+					                <option value="su">Sử</option>
+					                <option value="dia">Địa</option>
+					                <option value="ly">Lý</option>
+					                <option value="hoa">Hóa</option>
+					            </select>					
+					            <select>
+					                <option value="">Trạng thái: Tất cả</option>
+					                <option value="">Đang hoạt động</option>
+					                <option value="">Không hoạt động</option>
+					            </select>				
+					            <button class="btn-filter">Lọc</button>
+					            <button class="btn-add" onclick="location.href='/uploadtest'">+ Tạo đề mới</button>
+					        </div>
+					    </div>
+					    <table>
+					        <thead>
+					            <tr>
+					                <th>#</th>
+					                <th>Tên đề</th>
+					                <th>Danh mục</th>
+					                <th>Số câu</th>
+					                <th>Lượt làm</th>
+					                <th>Tạo ngày</th>
+					                <th>Trạng thái</th>
+					                <th>Hành động</th>
+					            </tr>
+					        </thead>
+					
+					        <tbody>
+					            <tr>
+					                <td>1</td>
+					                <td>
+					                    <b>Đề thi Toán - Cơ bản</b><br>
+					                    <span class="sub">Kiến thức lớp 10-12</span>
+					                </td>
+					                <td><span class="tag blue">Toán học</span></td>
+					                <td>20</td>
+					                <td>245</td>
+					                <td>01/06/2024<br>10:20</td>
+					                <td><span class="status active">Đang hoạt động</span></td>
+					                <td class="actions-icon">
+					                    <button>👁</button>
+					                    <button>👤</button>
+					                    <button>📊</button>
+					                    <button>⋮</button>
+					                </td>
+					            </tr>
+					        </tbody>
+					    </table>
+					
+					    <div class="pagination">
+					        <button>‹</button>
+					        <button class="active">1</button>
+					        <button>2</button>
+					        <button>3</button>
+					        <button>›</button>
+					    </div>
+					</div>
+                </div>
+                <div class="manage-user-right">
+                    <div class="exam-detail">
+                        <div class="detail-header">
+                            <h3>Thông tin đề thi</h3>
+                            <span class="close">×</span>
+                        </div>
+                        <div class="exam-profile">
+                            <div class="icon">📄</div>
+                            <div>
+                                <p class="title">Đề thi Toán - Cơ bản</p>
+                                <span class="status active">Đang hoạt động</span>
+                                <p class="exam-id">ID: #EXAM001</p>
+                            </div>
+                        </div>
+                        <div class="info-list">
+                            <div class="info-row">
+                                <span>Danh mục</span>
+                                <p>Toán học</p>
+                            </div>
+                            <div class="info-row">
+                                <span>Số câu hỏi</span>
+                                <p>20 câu</p>
+                            </div>
+                            <div class="info-row">
+                                <span>Thời gian làm bài</span>
+                                <p>45 phút</p>
+                            </div>
+                            <div class="info-row">
+                                <span>Tạo ngày</span>
+                                <p>01/06/2024 10:20</p>
+                            </div>
+                            <div class="info-row">
+                                <span>Cập nhật cuối</span>
+                                <p>02/06/2024 09:15</p>
+                            </div>
+                            <div class="info-row">
+                                <span>Mô tả</span>
+                                <p>Đề thi bao gồm kiến thức toán học cơ bản lớp 10, 11, 12.</p>
+                            </div>
+                        </div>
+                        <div class="tabs">
+                            <span class="active">Thống kê</span>
+                            <span>Lượt làm bài</span>
+                            <span>Câu hỏi</span>
+                        </div>
+                        <div class="stats-info">
+                            <div class="stat-card blue">
+                                <p class="value">245</p>
+                                <span>Tổng lượt làm</span>
+                            </div>
+                            <div class="stat-card green">
+                                <p class="value">220</p>
+                                <span>Số bài làm</span>
+                            </div>
+                            <div class="stat-card yellow">
+                                <p class="value">8.25</p>
+                                <span>Điểm trung bình</span>
+                            </div>
+                            <div class="stat-card purple">
+                                <p class="value">87%</p>
+                                <span>Tỉ lệ hoàn thành</span>
+                            </div>
+                        </div>
+                        <div class="detail-footer">
+                            <button>Xem chi tiết đề</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="page subject-page">
+            <div class="header">
+                <span style="font-size: 18px; font-weight: 600;">Quản lý Môn học</span>
+            </div>
+            <div class="manage-subject-form">
+                <div class="table-card">
+                    <div class="table-header">
+                        <div>
+                            <h2>Danh sách môn học</h2>
+                            <p>Quản lý tất cả môn học trong hệ thống</p>
+                        </div>
+                        <button class="add-btn">
+                            <i class="fa-solid fa-plus"></i>
+                            Thêm môn học
+                        </button>
+                    </div>
+                    <table>
+                        <thead>
+                        <tr>
+                            <th>STT</th>
+                            <th style="text-align: left;">Tên môn học</th>
+                            <th>Mã môn</th>
+                            <th>Số đề thi</th>
+                            <th>Trạng thái</th>
+                            <th>Thao tác</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr>
+                            <td>1</td>
+                            <td>
+                                <div class="subject">
+                                    <div class="icon">
+                                        <i class="fa-solid fa-calculator"></i>
+                                    </div>
+                                    <div>
+                                        <div class="name">
+                                            Toán
+                                        </div>
+                                        <div class="desc">
+                                            Mathematics
+                                        </div>
+                                    </div>
+                                </div>
+                            </td>
+                            <td>TOAN</td>
+                            <td>28</td>
+                            <td>
+                                <span class="status">Đang hoạt động</span>
+                            </td>
+                            <td>
+                                <div class="action">
+                                    <button><i class="fa-solid fa-trash"></i></button>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>2</td>
+                            <td>
+                                <div class="subject">
+                                    <div class="icon">
+                                        <i class="fa-solid fa-circle-radiation"></i>
+                                    </div>
+                                    <div>
+                                        <div class="name">
+                                            Vật lý
+                                        </div>
+                                        <div class="desc">
+                                            Physics
+                                        </div>
+                                    </div>
+                                </div>
+                            </td>
+                            <td>VATLY</td>
+                            <td>18</td>
+                            <td>
+                                <span class="status">
+                                    Đang hoạt động
+                                </span>
+                            </td>
+                            <td>
+                                <div class="action">
+                                    <button>
+                                        <i class="fa-solid fa-trash"></i>
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>3</td>
+                            <td>
+                                <div class="subject">
+                                    <div class="icon">
+                                        <i class="fa-solid fa-vial"></i>
+                                    </div>
+                                    <div>
+                                        <div class="name">
+                                            Hóa học
+                                        </div>
+                                        <div class="desc">
+                                            Chemistry
+                                        </div>
+                                    </div>
+                                </div>
+                            </td>
+                            <td>HOAHOC</td>
+                            <td>14</td>
+                            <td>
+                                <span class="status">
+                                    Đang hoạt động
+                                </span>
+                            </td>
+                            <td>
+                                <div class="action">
+                                    <button>
+                                        <i class="fa-solid fa-trash"></i>
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>4</td>
+                            <td>
+                                <div class="subject">
+                                    <div class="icon">
+                                        <i class="fa-solid fa-dna"></i>
+                                    </div>
+                                    <div>
+                                        <div class="name">
+                                            Sinh học
+                                        </div>
+                                        <div class="desc">
+                                            Biology
+                                        </div>
+                                    </div>
+                                </div>
+                            </td>
+                            <td>SINH</td>
+                            <td>12</td>
+                            <td>
+                                <span class="status">
+                                    Đang hoạt động
+                                </span>
+                            </td>
+                            <td>
+                                <div class="action">
+                                    <button>
+                                        <i class="fa-solid fa-trash"></i>
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>5</td>
+                            <td>
+                                <div class="subject">
+                                    <div class="icon">
+                                        <i class="fa-solid fa-earth-oceania"></i>
+                                    </div>
+                                    <div>
+                                        <div class="name">
+                                            Địa lý
+                                        </div>
+                                        <div class="desc">
+                                            Geography
+                                        </div>
+                                    </div>
+                                </div>
+                            </td>
+                            <td>DIALY</td>
+                            <td>11</td>
+                            <td>
+                                <span class="status">
+                                    Đang hoạt động
+                                </span>
+                            </td>
+                            <td>
+                                <div class="action">
+                                    <button>
+                                        <i class="fa-solid fa-trash"></i>
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script th:src="@{/js/admin.js}"></script>
+</body>
+</html>

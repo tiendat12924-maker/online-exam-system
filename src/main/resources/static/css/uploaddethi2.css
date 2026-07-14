@@ -1,0 +1,465 @@
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+body{
+    font-family:"Inter",sans-serif;
+    background:#f3f6fb;
+    color:#1f2937;
+
+}
+.essay-page{
+    width:95%;
+    max-width:1700px;
+    margin:30px auto;
+    display:grid;
+    grid-template-columns:2.3fr 1fr;
+    gap:28px;
+}
+.essay-left{
+    display:flex;
+    flex-direction:column;
+    gap:25px;
+}
+.essay-right{
+    display:flex;
+    flex-direction:column;
+    gap:22px;
+}
+.question-card,
+.preview-card,
+.info-card,
+.note-card{
+    background:#fff;
+    border-radius:18px;
+    padding:20px;
+    box-shadow:0 10px 30px rgba(0,0,0,.05);
+}
+.section-title{
+    display:flex;
+    align-items:center;
+    gap:15px;
+    margin-bottom:28px;
+}
+.step-circle{
+    width:38px;
+    height:38px;
+    border-radius:50%;
+    background:#2563eb;
+    color:#fff;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    font-weight:700;
+}
+.section-title h2{
+    font-size:28px;
+    font-weight:700;
+}
+.question-top{
+    display:flex;
+    justify-content:space-between;
+    align-items:flex-end;
+    gap:35px;
+}
+.type-group{
+    flex:1;
+}
+.type-group>label{
+    display:block;
+    font-weight:600;
+    margin-bottom:12px;
+}
+.question-types{
+    display:flex;
+    gap:28px;
+    flex-wrap:wrap;
+}
+.question-types label{
+    display:flex;
+    align-items:center;
+    gap:8px;
+    cursor:pointer;
+    font-size:15px;
+}
+.question-types input{
+    width:18px;
+    height:18px;
+    accent-color:#2563eb;
+}
+.essay-select{
+    width:320px;
+    margin-bottom: 30px;
+}
+.essay-select label{
+    display:block;
+    margin-bottom:10px;
+    font-weight:600;
+}
+.essay-select select{
+    width:100%;
+    height:48px;
+    border:1px solid #d1d5db;
+    border-radius:10px;
+    padding:0 15px;
+    outline:none;
+    font-size:15px;
+}
+.essay-select select:focus{
+    border-color:#2563eb;
+}
+.editor-answer{
+    display:grid;
+    grid-template-columns:1.6fr 1fr;
+    gap:25px;
+}
+.editor-box{
+    border:1px solid #e5e7eb;
+    border-radius:14px;
+    overflow:hidden;
+}
+.box-title{
+    background:#f8fafc;
+    padding:16px 20px;
+    font-weight:600;
+    border-bottom:1px solid #e5e7eb;
+}
+.editor-box textarea{
+    width:100%;
+    min-height:230px;
+    border:none;
+    resize:none;
+    padding:20px;
+    outline:none;
+    font-size:15px;
+    line-height:28px;
+}
+.note{
+    padding:14px 20px;
+    background:#eff6ff;
+    color:#2563eb;
+    font-size:14px;
+}
+.answer-table{
+    border:1px solid #e5e7eb;
+    border-radius:14px;
+    overflow:hidden;
+    background:#fff;
+}
+.table-header{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    padding:18px 20px;
+    border-bottom:1px solid #e5e7eb;
+    background:#f8fafc;
+}
+.table-header h3{
+    font-size:18px;
+    color:#111827;
+}
+.table-header button{
+    border:none;
+    background:#2563eb;
+    color:#fff;
+    padding:10px 18px;
+    border-radius:10px;
+    cursor:pointer;
+    font-weight:600;
+    transition:.25s;
+}
+.table-header button:hover{
+    background:#1d4ed8;
+}
+.table-header button i{
+    margin-right:8px;
+}
+table{
+    width:100%;
+    border-collapse:collapse;
+}
+thead{
+    background:#f9fafb;
+}
+thead th{
+    padding:15px;
+    text-align:left;
+    font-size:14px;
+    color:#374151;
+    border-bottom:1px solid #e5e7eb;
+}
+tbody td{
+    padding:16px;
+    border-bottom:1px solid #edf2f7;
+    font-size:15px;
+}
+tbody tr{
+    transition:.25s;
+}
+tbody tr:hover{
+    background:#f8fbff;
+}
+tbody td:last-child{
+    text-align:center;
+}
+tbody td i{
+    width:34px;
+    height:34px;
+    line-height:34px;
+    text-align:center;
+    display: flex !important;
+    align-items: center;
+    justify-content: center;
+    border-radius:8px;
+    cursor:pointer;
+    transition:.25s;
+    margin:0 3px;
+}
+.fa-pen{
+    background:#fef3c7;
+    color:#d97706;
+}
+.fa-trash{
+    background:#fee2e2;
+    color:#dc2626;
+}
+.fa-pen:hover{
+    background:#fde68a;
+}
+.fa-trash:hover{
+    background:#fecaca;
+}
+.fill-bottom,
+.sort-bottom{
+    display:grid;
+    grid-template-columns:220px 1fr;
+    gap:25px;
+    margin-top:30px;
+}
+.input-group{
+    display:flex;
+    flex-direction:column;
+}
+.input-group label{
+    font-weight:600;
+    margin-bottom:10px;
+}
+.input-group span{
+    color:#9ca3af;
+    font-size:13px;
+    font-weight:400;
+}
+.input-group input{
+    height:46px;
+    border:1px solid #d1d5db;
+    border-radius:10px;
+    padding:0 14px;
+    outline:none;
+    font-size:15px;
+}
+.input-group textarea{
+    min-height:130px;
+    border:1px solid #d1d5db;
+    border-radius:10px;
+    padding:15px;
+    resize:vertical;
+    outline:none;
+    font-size:15px;
+    width: 580px;
+}
+.input-group input:focus,
+.input-group textarea:focus{
+    border-color:#2563eb;
+    box-shadow:0 0 0 4px rgba(37,99,235,.12);
+}
+.button-group{
+    display:flex;
+    justify-content:flex-end;
+    gap:15px;
+    margin-top:35px;
+}
+.btn-cancel{
+    border:1px solid #d1d5db;
+    background:#fff;
+    color:#374151;
+    padding:12px 25px;
+    border-radius:10px;
+    cursor:pointer;
+    font-weight:600;
+    transition:.25s;
+}
+.btn-cancel:hover{
+    background:#f9fafb;
+}
+.btn-save{
+    border:none;
+    background:#2563eb;
+    color:#fff;
+    padding:12px 25px;
+    border-radius:10px;
+    cursor:pointer;
+    font-weight:600;
+    transition:.25s;
+}
+.btn-save:hover{
+    background:#1d4ed8;
+}
+.btn-save i{
+    margin-right:8px;
+}
+.sort-top{
+    display:grid;
+    grid-template-columns:2fr 320px;
+    gap:25px;
+}
+.sort-order{
+    display:flex;
+    flex-direction:column;
+}
+.sort-order label{
+    margin-bottom:10px;
+    font-weight:600;
+}
+.sort-order input{
+    height:48px;
+    border:1px solid #d1d5db;
+    border-radius:10px;
+    padding:0 15px;
+    outline:none;
+}
+.sort-order input:focus{
+    border-color:#2563eb;
+}
+.preview-title{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    font-size:20px;
+    font-weight:700;
+    margin-bottom:20px;
+}
+.preview-title i{
+    color:#2563eb;
+}
+.preview-body{
+    border:1px solid #e5e7eb;
+    border-radius:14px;
+    background:#fafafa;
+    padding:20px;
+}
+.preview-question{
+    line-height:32px;
+    margin-bottom:18px;
+    font-size:15px;
+}
+.blank{
+    display:inline-block;
+    width:140px;
+    border-bottom:2px solid #2563eb;
+    margin-left:8px;
+    height:18px;
+}
+.info-card h3{
+    font-size:20px;
+    margin-bottom:20px;
+}
+.info-card h3 i{
+    color:#2563eb;
+    margin-right:8px;
+}
+.info-item{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    padding:14px 0;
+    border-bottom:1px dashed #e5e7eb;
+}
+.info-item:last-child{
+    border:none;
+}
+.info-item span{
+    color:#6b7280;
+}
+.info-item strong{
+    color:#111827;
+}
+.note-card{
+    background:#fffdf4;
+    border:1px solid #fde68a;
+}
+.note-card h3{
+    color:#92400e;
+    margin-bottom:15px;
+}
+.note-card ul{
+    padding-left:20px;
+}
+.note-card li{
+    margin-bottom:12px;
+    line-height:24px;
+    color:#78350f;
+}
+.question-card,
+.preview-card,
+.info-card,
+.note-card{
+    transition:.3s;
+}
+.question-card:hover,
+.preview-card:hover,
+.info-card:hover{
+    transform:translateY(-2px);
+    box-shadow:0 18px 40px rgba(0,0,0,.08);
+}
+button{
+    transition:.25s;
+}
+button:hover{
+    transform:translateY(-2px);
+}
+@media(max-width:1300px){
+    .essay-page{
+        grid-template-columns:1fr;
+    }
+    .essay-right{
+        order:-1;
+    }
+}
+@media(max-width:992px){
+    .editor-answer{
+         grid-template-columns:1fr;
+    }
+    .sort-top{
+        grid-template-columns:1fr;
+    }
+    .question-top{
+        flex-direction:column;
+        align-items:stretch;
+    }
+    .essay-select{
+        width:100%;
+    }
+}
+@media(max-width:768px){
+    .fill-bottom,
+    .sort-bottom{
+        grid-template-columns:1fr;
+    }
+    .question-types{
+        flex-direction:column;
+        gap:15px;
+    }
+    .button-group{
+        flex-direction:column;
+    }
+    .button-group button{
+        width:100%;
+    }
+    table{
+        display:block;
+        overflow-x:auto;
+        white-space:nowrap;
+    }
+}
