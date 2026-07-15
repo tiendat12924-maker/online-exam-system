@@ -31,3 +31,8 @@ build/
 
 ### VS Code ###
 .vscode/
+
+# Antigravity/Gemini agents and workspace configs
+.agents/
+GEMINI.md
+generate_mock_excel.py

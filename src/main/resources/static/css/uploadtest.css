@@ -329,3 +329,179 @@ body{
         justify-content:center;
     }
 }
+
+/* Modal Import Excel CSS */
+.mapping-modal-backdrop {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(15, 23, 42, 0.4);
+    backdrop-filter: blur(8px);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease;
+}
+.mapping-modal-backdrop.show {
+    opacity: 1;
+    pointer-events: auto;
+}
+.mapping-modal-dialog {
+    background: #ffffff;
+    width: 90%;
+    max-width: 650px;
+    border-radius: 24px;
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.15);
+    overflow: hidden;
+    transform: translateY(20px);
+    transition: transform 0.3s ease;
+}
+.mapping-modal-backdrop.show .mapping-modal-dialog {
+    transform: translateY(0);
+}
+.mapping-modal-header {
+    padding: 24px 30px;
+    border-bottom: 1px solid #f1f5f9;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.mapping-modal-header h3 {
+    font-size: 20px;
+    font-weight: 700;
+    color: #0f172a;
+}
+.mapping-modal-close {
+    background: none;
+    border: none;
+    font-size: 24px;
+    color: #64748b;
+    cursor: pointer;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: 0.2s;
+}
+.mapping-modal-close:hover {
+    background: #f1f5f9;
+    color: #0f172a;
+}
+.mapping-modal-close:focus-visible {
+    outline: 2px solid #2563eb;
+}
+.mapping-modal-body {
+    padding: 30px;
+    max-height: 70vh;
+    overflow-y: auto;
+}
+.mapping-modal-body p.subtitle {
+    color: #64748b;
+    font-size: 14px;
+    margin-bottom: 24px;
+    line-height: 20px;
+}
+.mapping-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+}
+@media (max-width: 600px) {
+    .mapping-grid {
+        grid-template-columns: 1fr;
+    }
+}
+.mapping-group {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+.mapping-group label {
+    font-size: 14px;
+    font-weight: 600;
+    color: #334155;
+}
+.mapping-group select {
+    height: 46px;
+    padding: 0 16px;
+    border: 1px solid #cbd5e1;
+    border-radius: 10px;
+    font-size: 14px;
+    background: #fff;
+    outline: none;
+    transition: 0.2s;
+}
+.mapping-group select:focus-visible {
+    border-color: #2563eb;
+    box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.12);
+}
+.mapping-modal-footer {
+    padding: 24px 30px;
+    border-top: 1px solid #f1f5f9;
+    background: #f8fafc;
+    display: flex;
+    justify-content: flex-end;
+    gap: 12px;
+}
+.btn-secondary {
+    padding: 12px 24px;
+    border: 1px solid #cbd5e1;
+    background: #fff;
+    color: #334155;
+    border-radius: 10px;
+    font-weight: 600;
+    font-size: 14px;
+    cursor: pointer;
+    transition: 0.2s;
+}
+.btn-secondary:hover {
+    background: #f1f5f9;
+}
+.btn-secondary:focus-visible {
+    outline: 2px solid #64748b;
+}
+.btn-primary {
+    padding: 12px 28px;
+    border: none;
+    background: #2563eb;
+    color: #fff;
+    border-radius: 10px;
+    font-weight: 600;
+    font-size: 14px;
+    cursor: pointer;
+    transition: 0.2s;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+}
+.btn-primary:hover {
+    background: #1d4ed8;
+}
+.btn-primary:focus-visible {
+    outline: 2px solid #1d4ed8;
+}
+.btn-primary:disabled {
+    background: #94a3b8;
+    cursor: not-allowed;
+}
+.spinner {
+    width: 18px;
+    height: 18px;
+    border: 2px solid #ffffff;
+    border-bottom-color: transparent;
+    border-radius: 50%;
+    display: inline-block;
+    box-sizing: border-box;
+    animation: rotation 1s linear infinite;
+}
+@keyframes rotation {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}

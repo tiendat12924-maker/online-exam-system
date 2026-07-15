@@ -210,18 +210,18 @@
                             </thead>
                             <tbody>
                                 <!-- sau này thay bằng th:each -->
-                                <tr>
-                                    <td>1</td>
+                                <tr th:each="u, state : ${users}">
+                                    <td th:text="${state.count}">1</td>
                                     <td class="user-info">
                                         <img src="https://i.pravatar.cc/40" alt="">
                                         <div>
-                                            <p class="email">nguyenvana@gmail.com</p>
-                                            <span class="name">Nguyễn Văn A</span>
+                                            <p class="email" th:text="${u.email}">nguyenvana@gmail.com</p>
+                                            <span class="name" th:text="${u.fullName}">Nguyễn Văn A</span>
                                         </div>
                                     </td>
                                     <td>12/05/2024</td>
                                     <td><span class="status active">Hoạt động</span></td>
-                                    <td>15</td>
+                                    <td>0</td>
                                     <td class="actions">
                                         <button class="icon-btn">👁</button>
                                         <button class="icon-btn"><i class="fa-solid fa-chart-simple"></i></button>
@@ -322,7 +322,7 @@
                             </div>
                             <div class="card-content">
                                 <span>Tổng số đề</span>
-                                <h3>125</h3>
+                                <h3 th:text="${totalTests}">125</h3>
                             </div>
                         </div>
                         <div class="card">
@@ -360,14 +360,7 @@
 					            <input type="text" placeholder="Tìm kiếm đề thi...">					
 					            <select>
 					                <option value="">Danh mục: Tất cả</option>
-					                <option value="toan">Toán</option>
-					                <option value="van">Văn</option>
-					                <option value="anh">Anh</option>
-					                <option value="sinh">Sinh</option>
-					                <option value="su">Sử</option>
-					                <option value="dia">Địa</option>
-					                <option value="ly">Lý</option>
-					                <option value="hoa">Hóa</option>
+					                <option th:each="sub : ${subjects}" th:value="${sub.id}" th:text="${sub.name}">Toán</option>
 					            </select>					
 					            <select>
 					                <option value="">Trạng thái: Tất cả</option>
@@ -393,19 +386,27 @@
 					        </thead>
 					
 					        <tbody>
-					            <tr>
-					                <td>1</td>
+					            <tr th:each="test, state : ${tests}">
+					                <td th:text="${state.count}">1</td>
 					                <td>
-					                    <b>Đề thi Toán - Cơ bản</b><br>
-					                    <span class="sub">Kiến thức lớp 10-12</span>
+					                    <b th:text="${test.title}">Đề thi Toán - Cơ bản</b><br>
+					                    <span class="sub" th:text="${'Kiến thức năm ' + test.year}">Kiến thức lớp 10-12</span>
 					                </td>
-					                <td><span class="tag blue">Toán học</span></td>
-					                <td>20</td>
-					                <td>245</td>
-					                <td>01/06/2024<br>10:20</td>
+					                <td><span class="tag blue" th:text="${test.subject.name}">Toán học</span></td>
+					                <td th:text="${test.questions != null ? test.questions.size() : 0}">20</td>
+					                <td>0</td>
+					                <td th:text="${#temporals.format(test.createdAt, 'dd/MM/yyyy HH:mm')}">01/06/2024<br>10:20</td>
 					                <td><span class="status active">Đang hoạt động</span></td>
 					                <td class="actions-icon">
-					                    <button>👁</button>
+					                    <button class="btn-view-detail"
+					                            th:data-id="${test.id}"
+					                            th:data-title="${test.title}"
+					                            th:data-subject="${test.subject.name}"
+					                            th:data-questions="${test.questions != null ? test.questions.size() : 0}"
+					                            th:data-duration="${test.duration}"
+					                            th:data-created="${#temporals.format(test.createdAt, 'dd/MM/yyyy HH:mm')}"
+					                            th:data-updated="${test.updatedAt != null ? #temporals.format(test.updatedAt, 'dd/MM/yyyy HH:mm') : #temporals.format(test.createdAt, 'dd/MM/yyyy HH:mm')}"
+					                            th:data-difficulty="${test.difficulty}">👁</button>
 					                    <button>👤</button>
 					                    <button>📊</button>
 					                    <button>⋮</button>
@@ -414,7 +415,7 @@
 					        </tbody>
 					    </table>
 					
-					    <div class="pagination">
+					    <div class="pagination" id="exam-pagination">
 					        <button>‹</button>
 					        <button class="active">1</button>
 					        <button>2</button>
@@ -504,7 +505,7 @@
                             <h2>Danh sách môn học</h2>
                             <p>Quản lý tất cả môn học trong hệ thống</p>
                         </div>
-                        <button class="add-btn">
+                        <button class="add-btn" onclick="openSubjectModal()">
                             <i class="fa-solid fa-plus"></i>
                             Thêm môn học
                         </button>
@@ -521,27 +522,23 @@
                         </tr>
                         </thead>
                         <tbody>
-                        <tr>
-                            <td>1</td>
+                        <tr th:each="sub, state : ${subjects}">
+                            <td th:text="${state.count}">1</td>
                             <td>
                                 <div class="subject">
                                     <div class="icon">
-                                        <i class="fa-solid fa-calculator"></i>
+                                        <i th:class="${sub.getIcon()}"></i>
                                     </div>
                                     <div>
-                                        <div class="name">
-                                            Toán
-                                        </div>
-                                        <div class="desc">
-                                            Mathematics
-                                        </div>
+                                        <div class="name" th:text="${sub.name}">Toán</div>
+                                        <div class="desc" th:text="${sub.code}">Mathematics</div>
                                     </div>
                                 </div>
                             </td>
-                            <td>TOAN</td>
-                            <td>28</td>
+                            <td th:text="${sub.code}">TOAN</td>
+                            <td th:text="${testCounts.get(sub.id) != null ? testCounts.get(sub.id) : 0}">28</td>
                             <td>
-                                <span class="status">Đang hoạt động</span>
+                                <span class="status" th:text="${sub.status ? 'Đang hoạt động' : 'Không hoạt động'}">Đang hoạt động</span>
                             </td>
                             <td>
                                 <div class="action">
@@ -549,137 +546,38 @@
                                 </div>
                             </td>
                         </tr>
-                        <tr>
-                            <td>2</td>
-                            <td>
-                                <div class="subject">
-                                    <div class="icon">
-                                        <i class="fa-solid fa-circle-radiation"></i>
-                                    </div>
-                                    <div>
-                                        <div class="name">
-                                            Vật lý
-                                        </div>
-                                        <div class="desc">
-                                            Physics
-                                        </div>
-                                    </div>
-                                </div>
-                            </td>
-                            <td>VATLY</td>
-                            <td>18</td>
-                            <td>
-                                <span class="status">
-                                    Đang hoạt động
-                                </span>
-                            </td>
-                            <td>
-                                <div class="action">
-                                    <button>
-                                        <i class="fa-solid fa-trash"></i>
-                                    </button>
-                                </div>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>3</td>
-                            <td>
-                                <div class="subject">
-                                    <div class="icon">
-                                        <i class="fa-solid fa-vial"></i>
-                                    </div>
-                                    <div>
-                                        <div class="name">
-                                            Hóa học
-                                        </div>
-                                        <div class="desc">
-                                            Chemistry
-                                        </div>
-                                    </div>
-                                </div>
-                            </td>
-                            <td>HOAHOC</td>
-                            <td>14</td>
-                            <td>
-                                <span class="status">
-                                    Đang hoạt động
-                                </span>
-                            </td>
-                            <td>
-                                <div class="action">
-                                    <button>
-                                        <i class="fa-solid fa-trash"></i>
-                                    </button>
-                                </div>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>4</td>
-                            <td>
-                                <div class="subject">
-                                    <div class="icon">
-                                        <i class="fa-solid fa-dna"></i>
-                                    </div>
-                                    <div>
-                                        <div class="name">
-                                            Sinh học
-                                        </div>
-                                        <div class="desc">
-                                            Biology
-                                        </div>
-                                    </div>
-                                </div>
-                            </td>
-                            <td>SINH</td>
-                            <td>12</td>
-                            <td>
-                                <span class="status">
-                                    Đang hoạt động
-                                </span>
-                            </td>
-                            <td>
-                                <div class="action">
-                                    <button>
-                                        <i class="fa-solid fa-trash"></i>
-                                    </button>
-                                </div>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>5</td>
-                            <td>
-                                <div class="subject">
-                                    <div class="icon">
-                                        <i class="fa-solid fa-earth-oceania"></i>
-                                    </div>
-                                    <div>
-                                        <div class="name">
-                                            Địa lý
-                                        </div>
-                                        <div class="desc">
-                                            Geography
-                                        </div>
-                                    </div>
-                                </div>
-                            </td>
-                            <td>DIALY</td>
-                            <td>11</td>
-                            <td>
-                                <span class="status">
-                                    Đang hoạt động
-                                </span>
-                            </td>
-                            <td>
-                                <div class="action">
-                                    <button>
-                                        <i class="fa-solid fa-trash"></i>
-                                    </button>
-                                </div>
-                            </td>
-                        </tr>
                         </tbody>
                     </table>
                 </div>
+            </div>
+        </div>
+
+        <!-- Modal Thêm Môn Học -->
+        <div id="add-subject-modal" class="modal-backdrop" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 1000; justify-content: center; align-items: center;">
+            <div style="background: #fff; padding: 25px; border-radius: 12px; width: 400px; box-shadow: 0 4px 15px rgba(0,0,0,0.2); position: relative; text-align: left;">
+                <span class="close-modal" onclick="closeSubjectModal()" style="position: absolute; top: 15px; right: 15px; cursor: pointer; font-size: 20px; font-weight: bold; color: #888;">&times;</span>
+                <h3 style="margin-top: 0; margin-bottom: 20px; font-size: 18px; color: #333;">Thêm Môn Học Mới</h3>
+                <form id="add-subject-form">
+                    <div style="margin-bottom: 15px;">
+                        <label style="display: block; margin-bottom: 5px; font-size: 13px; font-weight: 600; color: #555; text-align: left;">Tên Môn Học <span style="color: red;">*</span></label>
+                        <input type="text" id="modal-sub-name" required style="width: 100%; height: 38px; border: 1px solid #ddd; border-radius: 6px; padding: 0 10px; font-size: 14px; box-sizing: border-box;" placeholder="Ví dụ: Lịch sử">
+                    </div>
+                    <div style="margin-bottom: 15px;">
+                        <label style="display: block; margin-bottom: 5px; font-size: 13px; font-weight: 600; color: #555; text-align: left;">Mã Môn (Code) <span style="color: red;">*</span></label>
+                        <input type="text" id="modal-sub-code" required style="width: 100%; height: 38px; border: 1px solid #ddd; border-radius: 6px; padding: 0 10px; font-size: 14px; box-sizing: border-box;" placeholder="Ví dụ: HISTORY">
+                    </div>
+                    <div style="margin-bottom: 20px;">
+                        <label style="display: block; margin-bottom: 5px; font-size: 13px; font-weight: 600; color: #555; text-align: left;">Trạng thái</label>
+                        <select id="modal-sub-status" style="width: 100%; height: 38px; border: 1px solid #ddd; border-radius: 6px; padding: 0 10px; font-size: 14px; box-sizing: border-box;">
+                            <option value="true">Đang hoạt động</option>
+                            <option value="false">Không hoạt động</option>
+                        </select>
+                    </div>
+                    <div style="display: flex; justify-content: flex-end; gap: 10px;">
+                        <button type="button" onclick="closeSubjectModal()" style="height: 38px; padding: 0 15px; border: 1px solid #ccc; border-radius: 6px; background: #f5f5f5; cursor: pointer; font-weight: 600; font-size: 14px; color: #666;">Hủy</button>
+                        <button type="submit" style="height: 38px; padding: 0 15px; border: none; border-radius: 6px; background: #1a73e8; color: white; cursor: pointer; font-weight: 600; font-size: 14px;">Lưu lại</button>
+                    </div>
+                </form>
             </div>
         </div>
     </div>

@@ -3,6 +3,8 @@ package com.example.TTGT2_THPT.controller;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -12,6 +14,9 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.example.TTGT2_THPT.entity.Answers;
 import com.example.TTGT2_THPT.entity.Questions;
@@ -59,8 +64,58 @@ public class controller {
 	}
 	
 	@GetMapping("/admin")
-    public String admin() {
+    public String admin(Model model) {
+        List<Test> tests = repoTest.findAll(org.springframework.data.domain.Sort.by(org.springframework.data.domain.Sort.Direction.DESC, "createdAt"));
+        model.addAttribute("tests", tests);
+        
+        long totalTests = repoTest.count();
+        model.addAttribute("totalTests", totalTests);
+        
+        long totalUsers = repoUser.count();
+        model.addAttribute("totalUsers", totalUsers);
+        
+        List<Subjects> subjects = repoSub.findAll();
+        model.addAttribute("subjects", subjects);
+        
+        List<User> users = repoUser.findAll();
+        model.addAttribute("users", users);
+        
+        long totalQuestions = repoQuestion.count();
+        model.addAttribute("totalQuestions", totalQuestions);
+        
+        Map<Long, Long> testCounts = tests.stream()
+            .filter(t -> t.getSubject() != null)
+            .collect(Collectors.groupingBy(t -> t.getSubject().getId(), Collectors.counting()));
+        model.addAttribute("testCounts", testCounts);
+        
         return "admin";
+    }
+
+	@PostMapping("/admin/api/add-subject")
+    @ResponseBody
+    public ResponseEntity<?> addSubject(@RequestBody Subjects subject) {
+        if (subject.getName() == null || subject.getName().trim().isEmpty()) {
+            return ResponseEntity.badRequest().body("Tên môn học không được để trống");
+        }
+        if (subject.getCode() == null || subject.getCode().trim().isEmpty()) {
+            return ResponseEntity.badRequest().body("Mã môn học không được để trống");
+        }
+        
+        if (subject.getDescription() == null || subject.getDescription().trim().isEmpty()) {
+            subject.setDescription("Môn học " + subject.getName());
+        }
+
+        if (repoSub.findByCode(subject.getCode()).isPresent()) {
+            return ResponseEntity.badRequest().body("Mã môn học đã tồn tại");
+        }
+        
+        boolean existsByName = repoSub.findAll().stream().anyMatch(s -> s.getName().equalsIgnoreCase(subject.getName()));
+        if (existsByName) {
+            return ResponseEntity.badRequest().body("Tên môn học đã tồn tại");
+        }
+
+        repoSub.save(subject);
+        return ResponseEntity.ok("Thêm môn học thành công");
     }
 	
 	@GetMapping("/login")

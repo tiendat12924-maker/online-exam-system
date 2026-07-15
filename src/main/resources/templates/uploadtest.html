@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="vi">
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
 
 <head>
     <meta charset="UTF-8">
@@ -7,7 +7,7 @@
     <title>Tạo đề thi</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
-    <link rel="stylesheet" href="/css/uploadtest.css">
+    <link rel="stylesheet" th:href="@{/css/uploadtest.css}">
 </head>
 <body>
 <div class="exam-container">
@@ -36,7 +36,7 @@
             Chọn phương thức tạo đề
         </h2>
         <div class="method">
-            <div class="method-card active">
+            <div class="method-card active" id="methodManual">
                 <div class="method-icon">
                     <i class="fa-solid fa-pen"></i>
                 </div>
@@ -57,7 +57,7 @@
                     </ul>
                 </div>
             </div>
-            <div class="method-card">
+            <div class="method-card" id="methodExcel">
                 <div class="method-icon green">
                     <i class="fa-solid fa-file-excel"></i>
                 </div>
@@ -137,10 +137,10 @@
                 <p>
                     Tải file Excel mẫu theo cấu trúc chuẩn
                 </p>
-                <button class="download">
+                <a href="/de_thi_mau.xlsx" download class="download" style="text-decoration: none;">
                     <i class="fa-solid fa-file-excel"></i>
                     Tải file mẫu Excel
-                </button>
+                </a>
             </div>
         </div>
         <div class="guide-item">
@@ -165,7 +165,7 @@
                 <p>
                     Tải lên file Excel của bạn
                 </p>
-                <button class="upload">
+                <button type="button" class="upload" id="btnSelectExcel">
                     <i class="fa-solid fa-upload"></i>
                     Chọn file Excel
                 </button>
@@ -185,5 +185,280 @@
         </div>
     </div>
 </div>
+
+<!-- Modal Mapping Excel -->
+<div class="mapping-modal-backdrop" id="mappingModal">
+    <div class="mapping-modal-dialog">
+        <div class="mapping-modal-header">
+            <h3>Cấu hình ánh xạ cột Excel</h3>
+            <button type="button" class="mapping-modal-close" id="btnCloseModal" aria-label="Đóng">×</button>
+        </div>
+        <div class="mapping-modal-body">
+            <p class="subtitle">Vui lòng chọn cột tương ứng từ file Excel của bạn để ánh xạ vào các trường thông tin trong cơ sở dữ liệu.</p>
+            <div class="mapping-grid">
+                <div class="mapping-group">
+                    <label for="colQuestion">Nội dung câu hỏi *</label>
+                    <select id="colQuestion" required></select>
+                </div>
+                <div class="mapping-group">
+                    <label for="colCorrect">Đáp án đúng *</label>
+                    <select id="colCorrect" required></select>
+                </div>
+                <div class="mapping-group">
+                    <label for="colAnsA">Đáp án A *</label>
+                    <select id="colAnsA" required></select>
+                </div>
+                <div class="mapping-group">
+                    <label for="colAnsB">Đáp án B *</label>
+                    <select id="colAnsB" required></select>
+                </div>
+                <div class="mapping-group">
+                    <label for="colAnsC">Đáp án C *</label>
+                    <select id="colAnsC" required></select>
+                </div>
+                <div class="mapping-group">
+                    <label for="colAnsD">Đáp án D *</label>
+                    <select id="colAnsD" required></select>
+                </div>
+                <div class="mapping-group">
+                    <label for="colPassage">Đoạn văn ngữ liệu (Tùy chọn)</label>
+                    <select id="colPassage"></select>
+                </div>
+                <div class="mapping-group">
+                    <label for="colInstruction">Chỉ dẫn nhóm (Tùy chọn)</label>
+                    <select id="colInstruction"></select>
+                </div>
+            </div>
+        </div>
+        <div class="mapping-modal-footer">
+            <button type="button" class="btn-secondary" id="btnCancelModal">Hủy</button>
+            <button type="button" class="btn-primary" id="btnConfirmImport">
+                Xác nhận Import
+            </button>
+        </div>
+    </div>
+</div>
+
+<input type="file" id="excelFileInput" accept=".xlsx, .xls" style="display: none;">
+
+<script>
+    let excelFile = null;
+
+    // Chuyển đổi phương thức tạo đề
+    const methodManual = document.getElementById('methodManual');
+    const methodExcel = document.getElementById('methodExcel');
+    const btnNext = document.querySelector('.btn-next');
+
+    methodManual.addEventListener('click', () => {
+        methodManual.classList.add('active');
+        methodExcel.classList.remove('active');
+        btnNext.innerHTML = 'Tiếp tục <i class="fa-solid fa-arrow-right"></i>';
+    });
+
+    methodExcel.addEventListener('click', () => {
+        methodExcel.classList.add('active');
+        methodManual.classList.remove('active');
+        btnNext.innerHTML = 'Import & Tiếp tục <i class="fa-solid fa-arrow-right"></i>';
+    });
+
+    // Xử lý nút Chọn file Excel
+    const btnSelectExcel = document.getElementById('btnSelectExcel');
+    const excelFileInput = document.getElementById('excelFileInput');
+
+    btnSelectExcel.addEventListener('click', () => {
+        excelFileInput.click();
+    });
+
+    excelFileInput.addEventListener('change', function(e) {
+        if (this.files.length > 0) {
+            excelFile = this.files[0];
+            btnSelectExcel.innerHTML = `<i class="fa-solid fa-file-excel"></i> ${excelFile.name}`;
+            
+            // Tải file lên để đọc Header
+            const formData = new FormData();
+            formData.append('file', excelFile);
+
+            fetch('/api/excel/read-headers', {
+                method: 'POST',
+                body: formData
+            })
+            .then(res => {
+                if (!res.ok) {
+                    throw new Error('Không thể đọc tệp Excel. Vui lòng kiểm tra lại định dạng.');
+                }
+                return res.json();
+            })
+            .then(headers => {
+                populateMappingSelects(headers);
+                openModal();
+            })
+            .catch(err => {
+                alert(err.message);
+                excelFile = null;
+                btnSelectExcel.innerHTML = '<i class="fa-solid fa-upload"></i> Chọn file Excel';
+            });
+        }
+    });
+
+    // Điền dữ liệu vào các select dropdown của Modal Mapping
+    function populateMappingSelects(headers) {
+        const selects = ['colQuestion', 'colCorrect', 'colAnsA', 'colAnsB', 'colAnsC', 'colAnsD', 'colPassage', 'colInstruction'];
+        
+        selects.forEach(id => {
+            const select = document.getElementById(id);
+            select.innerHTML = '';
+            
+            // Thêm option rỗng cho trường tùy chọn
+            if (id === 'colPassage' || id === 'colInstruction') {
+                const emptyOpt = document.createElement('option');
+                emptyOpt.value = '';
+                emptyOpt.textContent = '-- Không chọn (Bỏ qua) --';
+                select.appendChild(emptyOpt);
+            }
+            
+            headers.forEach(h => {
+                const opt = document.createElement('option');
+                opt.value = h;
+                opt.textContent = h;
+                select.appendChild(opt);
+            });
+        });
+
+        // Tự động đoán và gợi ý map (Auto-mapping)
+        headers.forEach(h => {
+            const hLower = h.toLowerCase();
+            if (hLower.includes('câu hỏi') || hLower.includes('nội dung') || hLower.includes('question')) {
+                document.getElementById('colQuestion').value = h;
+            } else if (hLower.includes('đáp án đúng') || hLower.includes('đúng') || hLower.includes('key') || hLower.includes('correct')) {
+                document.getElementById('colCorrect').value = h;
+            } else if (hLower === 'a' || hLower.includes('đáp án a') || hLower.includes('câu a')) {
+                document.getElementById('colAnsA').value = h;
+            } else if (hLower === 'b' || hLower.includes('đáp án b') || hLower.includes('câu b')) {
+                document.getElementById('colAnsB').value = h;
+            } else if (hLower === 'c' || hLower.includes('đáp án c') || hLower.includes('câu c')) {
+                document.getElementById('colAnsC').value = h;
+            } else if (hLower === 'd' || hLower.includes('đáp án d') || hLower.includes('câu d')) {
+                document.getElementById('colAnsD').value = h;
+            } else if (hLower.includes('đoạn văn') || hLower.includes('ngữ liệu') || hLower.includes('passage')) {
+                document.getElementById('colPassage').value = h;
+            } else if (hLower.includes('chỉ dẫn') || hLower.includes('hướng dẫn') || hLower.includes('instruction')) {
+                document.getElementById('colInstruction').value = h;
+            }
+        });
+    }
+
+    // Modal control
+    const mappingModal = document.getElementById('mappingModal');
+    const btnCloseModal = document.getElementById('btnCloseModal');
+    const btnCancelModal = document.getElementById('btnCancelModal');
+
+    function openModal() {
+        mappingModal.classList.add('show');
+    }
+
+    function closeModal() {
+        mappingModal.classList.remove('show');
+    }
+
+    btnCloseModal.addEventListener('click', closeModal);
+    btnCancelModal.addEventListener('click', closeModal);
+
+    // Xử lý submit của form bên trái
+    const testForm = document.querySelector('.form-card form');
+    testForm.id = 'testForm';
+
+    testForm.addEventListener('submit', function(e) {
+        const isExcel = methodExcel.classList.contains('active');
+        if (isExcel) {
+            e.preventDefault();
+            if (!excelFile) {
+                alert('Vui lòng chọn file Excel trước khi tiến hành import.');
+                return;
+            }
+            openModal();
+        }
+    });
+
+    // Thực hiện Import thực tế khi bấm Confirm trên Modal
+    const btnConfirmImport = document.getElementById('btnConfirmImport');
+    btnConfirmImport.addEventListener('click', function() {
+        // Validate form thông tin đề thi trước
+        const titleInput = document.querySelector('input[name="title"]');
+        if (!titleInput.value.trim()) {
+            alert('Vui lòng nhập Tên đề thi ở form bên trái trước.');
+            closeModal();
+            titleInput.focus();
+            return;
+        }
+
+        const subjectSelect = document.querySelector('select[name="subject"]');
+        const durationInput = document.querySelector('input[name="duration"]');
+        const difficultySelect = document.querySelector('select[name="difficulty"]');
+
+        // Khóa giao diện và hiển thị loading
+        btnConfirmImport.disabled = true;
+        btnConfirmImport.innerHTML = '<span class="spinner"></span> Đang tạo đề thi…';
+
+        // 1. Tạo đề thi trước
+        const createForm = new FormData();
+        createForm.append('title', titleInput.value.trim());
+        createForm.append('subjectId', subjectSelect.value);
+        createForm.append('duration', durationInput.value ? durationInput.value : 45);
+        createForm.append('difficulty', difficultySelect.value);
+
+        fetch('/api/excel/create-test', {
+            method: 'POST',
+            body: createForm
+        })
+        .then(res => {
+            if (!res.ok) {
+                throw new Error('Lỗi khi tạo đề thi mới. Vui lòng thử lại.');
+            }
+            return res.json();
+        })
+        .then(data => {
+            if (data.testId) {
+                // 2. Tiến hành gửi file Excel và mapping
+                btnConfirmImport.innerHTML = '<span class="spinner"></span> Đang import câu hỏi…';
+                
+                const importForm = new FormData();
+                importForm.append('file', excelFile);
+                importForm.append('testId', data.testId);
+                importForm.append('questionContentCol', document.getElementById('colQuestion').value);
+                importForm.append('correctAnswerCol', document.getElementById('colCorrect').value);
+                importForm.append('answerACol', document.getElementById('colAnsA').value);
+                importForm.append('answerBCol', document.getElementById('colAnsB').value);
+                importForm.append('answerCCol', document.getElementById('colAnsC').value);
+                importForm.append('answerDCol', document.getElementById('colAnsD').value);
+                importForm.append('passageCol', document.getElementById('colPassage').value);
+                importForm.append('instructionCol', document.getElementById('colInstruction').value);
+
+                return fetch('/api/excel/import', {
+                    method: 'POST',
+                    body: importForm
+                }).then(res => {
+                    if (!res.ok) {
+                        return res.text().then(text => { throw new Error(text || 'Lỗi khi import câu hỏi.') });
+                    }
+                    return res.json();
+                }).then(importData => {
+                    return data.testId; // trả về testId để chuyển hướng
+                });
+            } else {
+                throw new Error('Không nhận được ID đề thi từ server.');
+            }
+        })
+        .then(testId => {
+            // Thành công -> chuyển hướng quay lại trang quản lý đề /admin
+            window.location.href = '/admin';
+        })
+        .catch(err => {
+            alert(err.message);
+            // Reset trạng thái nút
+            btnConfirmImport.disabled = false;
+            btnConfirmImport.innerHTML = 'Xác nhận Import';
+        });
+    });
+</script>
 </body>
 </html>
