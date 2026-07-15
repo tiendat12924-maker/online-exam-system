@@ -56,6 +56,11 @@ public class controller {
 	@Autowired
 	RepositoryQuestionGroup repoGroup;
 	
+	@GetMapping("/")
+	public String home() {
+		return "redirect:/index";
+	}
+
 	@GetMapping("/index")
 	public String index(Model model) {
 		List<Subjects> subjects = repoSub.findByStatus(true);
@@ -117,6 +122,89 @@ public class controller {
         repoSub.save(subject);
         return ResponseEntity.ok("Thêm môn học thành công");
     }
+
+	@PostMapping("/reviewdethi/{id}")
+	public String reviewDeThi(@PathVariable Integer id, @RequestParam Map<String, String> allParams, Model model) {
+	    Test test = repoTest.findById(id)
+	            .orElseThrow(() -> new RuntimeException("Không tìm thấy đề"));
+	    
+	    Map<String, Long> selectedAnswers = new java.util.HashMap<>();
+	    for (Map.Entry<String, String> entry : allParams.entrySet()) {
+	        if (entry.getKey().startsWith("question_")) {
+	            try {
+	                String questionIdStr = entry.getKey().replace("question_", "");
+	                Long answerId = Long.parseLong(entry.getValue());
+	                selectedAnswers.put(questionIdStr, answerId);
+	            } catch (NumberFormatException e) {
+	                // Bỏ qua lỗi
+	            }
+	        }
+	    }
+	    
+	    model.addAttribute("test", test);
+	    model.addAttribute("selectedAnswers", selectedAnswers);
+	    return "review";
+	}
+
+	@PostMapping("/submitdethi/{id}")
+	public String submitDeThi(@PathVariable Integer id, @RequestParam Map<String, String> allParams, Model model) {
+	    Test test = repoTest.findById(id)
+	            .orElseThrow(() -> new RuntimeException("Không tìm thấy đề"));
+	    
+	    int correctCount = 0;
+	    int wrongCount = 0;
+	    Map<String, Boolean> questionResults = new java.util.HashMap<>();
+	    Map<String, Long> selectedAnswers = new java.util.HashMap<>();
+	    
+	    for (Questions question : test.getQuestions()) {
+	        String paramValue = allParams.get("question_" + question.getId());
+	        String qIdStr = String.valueOf(question.getId());
+	        if (paramValue != null && !paramValue.trim().isEmpty()) {
+	            try {
+	                Long selectedAnsId = Long.parseLong(paramValue);
+	                selectedAnswers.put(qIdStr, selectedAnsId);
+	                
+	                boolean isCorrect = false;
+	                for (Answers ans : question.getAnswers()) {
+	                    if (ans.getId().equals(selectedAnsId) && ans.getIsCorrect()) {
+	                        isCorrect = true;
+	                        break;
+	                    }
+	                }
+	                
+	                if (isCorrect) {
+	                    correctCount++;
+	                    questionResults.put(qIdStr, true);
+	                } else {
+	                    wrongCount++;
+	                    questionResults.put(qIdStr, false);
+	                }
+	            } catch (NumberFormatException e) {
+	                wrongCount++;
+	                questionResults.put(qIdStr, false);
+	            }
+	        } else {
+	            wrongCount++;
+	            questionResults.put(qIdStr, false);
+	        }
+	    }
+	    
+	    double score = 0.0;
+	    if (test.getQuestions() != null && !test.getQuestions().isEmpty()) {
+	        score = (correctCount * 10.0) / test.getQuestions().size();
+	        score = Math.round(score * 100.0) / 100.0;
+	    }
+	    
+	    model.addAttribute("test", test);
+	    model.addAttribute("correctCount", correctCount);
+	    model.addAttribute("wrongCount", wrongCount);
+	    model.addAttribute("score", score);
+	    model.addAttribute("questionResults", questionResults);
+	    model.addAttribute("selectedAnswers", selectedAnswers);
+	    
+	    return "ketqua";
+	}
+	
 	
 	@GetMapping("/login")
 	public String showLogin(Model model) {

@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+    <title>Kết quả bài thi - THPT Online Exam</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap');
+
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: #f8fafc;
+            color: #0f172a;
+            padding-bottom: 60px;
+        }
+
+        .header {
+            position: sticky;
+            top: 0;
+            height: 70px;
+            background: #ffffff;
+            border-bottom: 1px solid #e2e8f0;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 24px;
+            z-index: 100;
+            box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .btn-home {
+            height: 40px;
+            padding: 0 20px;
+            border-radius: 10px;
+            border: none;
+            background: #2563eb;
+            color: #ffffff;
+            font-weight: 600;
+            font-size: 14px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.2s;
+        }
+
+        .btn-home:hover {
+            background: #1d4ed8;
+            box-shadow: 0 4px 12px rgba(37, 99, 235, 0.2);
+        }
+
+        .logo img {
+            height: 32px;
+        }
+
+        .tende {
+            font-size: 16px;
+            font-weight: 700;
+            color: #1e293b;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 40px auto;
+            padding: 0 20px;
+        }
+
+        /* Score Dashboard */
+        .score-card {
+            background: #ffffff;
+            border: 1px solid #e2e8f0;
+            border-radius: 24px;
+            padding: 40px;
+            margin-bottom: 40px;
+            text-align: center;
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05);
+        }
+
+        .score-circle {
+            width: 140px;
+            height: 140px;
+            border-radius: 50%;
+            background: #f1f5f9;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 24px auto;
+            border: 6px solid #e2e8f0;
+            transition: all 0.3s;
+        }
+
+        .score-circle.high {
+            background: #ecfdf5;
+            border-color: #10b981;
+        }
+        .score-circle.medium {
+            background: #fef8ec;
+            border-color: #f59e0b;
+        }
+        .score-circle.low {
+            background: #fef2f2;
+            border-color: #ef4444;
+        }
+
+        .score-number {
+            font-size: 40px;
+            font-weight: 800;
+            line-height: 1;
+        }
+        .score-circle.high .score-number { color: #10b981; }
+        .score-circle.medium .score-number { color: #d97706; }
+        .score-circle.low .score-number { color: #ef4444; }
+
+        .score-label {
+            font-size: 12px;
+            font-weight: 700;
+            color: #64748b;
+            text-transform: uppercase;
+            margin-top: 4px;
+        }
+
+        .congratulations {
+            font-size: 22px;
+            font-weight: 700;
+            color: #0f172a;
+            margin-bottom: 12px;
+        }
+
+        .sub-message {
+            font-size: 15px;
+            color: #64748b;
+            margin-bottom: 30px;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 16px;
+            max-width: 500px;
+            margin: 0 auto;
+            border-top: 1px solid #f1f5f9;
+            padding-top: 24px;
+        }
+
+        .stat-item {
+            text-align: center;
+        }
+
+        .stat-val {
+            font-size: 20px;
+            font-weight: 700;
+        }
+        .stat-val.correct { color: #10b981; }
+        .stat-val.wrong { color: #ef4444; }
+        .stat-val.total { color: #3b82f6; }
+
+        .stat-lbl {
+            font-size: 12px;
+            font-weight: 600;
+            color: #94a3b8;
+            margin-top: 4px;
+        }
+
+        /* Question Detail List */
+        .results-header {
+            font-size: 18px;
+            font-weight: 700;
+            color: #0f172a;
+            margin-bottom: 20px;
+        }
+
+        .question-card {
+            background: #ffffff;
+            border: 1px solid #e2e8f0;
+            border-radius: 16px;
+            padding: 28px;
+            margin-bottom: 24px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.03);
+            position: relative;
+        }
+
+        .question-card.is-correct {
+            border-left: 5px solid #10b981;
+        }
+
+        .question-card.is-wrong {
+            border-left: 5px solid #ef4444;
+        }
+
+        .question-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 16px;
+            border-bottom: 1px solid #f1f5f9;
+            padding-bottom: 12px;
+        }
+
+        .q-number {
+            font-size: 15px;
+            font-weight: 700;
+            color: #0f172a;
+        }
+
+        .q-status-tag {
+            font-size: 11px;
+            font-weight: 700;
+            padding: 4px 10px;
+            border-radius: 20px;
+        }
+        .question-card.is-correct .q-status-tag {
+            background: #d1fae5;
+            color: #065f46;
+        }
+        .question-card.is-wrong .q-status-tag {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+
+        .passage-section {
+            background: #f8fafc;
+            border-left: 4px solid #cbd5e1;
+            padding: 16px;
+            border-radius: 0 8px 8px 0;
+            margin-bottom: 18px;
+            font-size: 14px;
+            line-height: 1.6;
+            color: #475569;
+            max-height: 200px;
+            overflow-y: auto;
+        }
+
+        .question-content {
+            font-size: 15px;
+            line-height: 1.6;
+            color: #334155;
+            font-weight: 600;
+            margin-bottom: 20px;
+        }
+
+        .answers {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .answer {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 12px 16px;
+            border-radius: 10px;
+            border: 1px solid #e2e8f0;
+            background: #ffffff;
+            font-size: 14px;
+            font-weight: 500;
+            color: #64748b;
+        }
+
+        /* Thí sinh chọn đúng hoặc đáp án đúng */
+        .answer.correct-answer {
+            border-color: #10b981;
+            background: #ecfdf5;
+            color: #065f46;
+            font-weight: 600;
+        }
+
+        /* Thí sinh chọn sai */
+        .answer.wrong-user-choice {
+            border-color: #ef4444;
+            background: #fef2f2;
+            color: #991b1b;
+            font-weight: 600;
+        }
+
+        .label {
+            width: 24px;
+            height: 24px;
+            border-radius: 6px;
+            background: #f1f5f9;
+            color: #64748b;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            margin-right: 12px;
+            font-size: 12px;
+        }
+
+        .answer.correct-answer .label {
+            background: #10b981;
+            color: #ffffff;
+        }
+
+        .answer.wrong-user-choice .label {
+            background: #ef4444;
+            color: #ffffff;
+        }
+
+        .badge-info {
+            font-size: 11px;
+            font-weight: 700;
+            padding: 4px 8px;
+            border-radius: 6px;
+        }
+        .correct-answer .badge-info {
+            background: #10b981;
+            color: #ffffff;
+        }
+        .wrong-user-choice .badge-info {
+            background: #ef4444;
+            color: #ffffff;
+        }
+
+        .choice-container {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="header-left">
+            <button class="btn-home" onclick="location.href='/'">
+                <i class="fa-solid fa-house"></i> Về trang chủ
+            </button>
+            <div class="logo"><img src="/images/logo3.png" alt="DOV THPT"></div>
+            <div class="tende" th:text="${test.title}">Tên đề thi</div>
+        </div>
+    </div>
+
+    <div class="container">
+        <!-- Dashboard kết quả -->
+        <div class="score-card">
+            <div class="score-circle" th:classappend="${score >= 8.0} ? 'high' : (${score >= 5.0} ? 'medium' : 'low')">
+                <span class="score-number" th:text="${score}">8.5</span>
+                <span class="score-label">Điểm số</span>
+            </div>
+
+            <div class="congratulations" th:text="${score >= 8.0} ? 'Xuất sắc! Chúc mừng bạn.' : (${score >= 5.0} ? 'Đạt yêu cầu! Hãy cố gắng thêm.' : 'Chưa đạt! Cần luyện tập thêm.')">
+                Lời nhắn chúc mừng
+            </div>
+            <div class="sub-message">Bạn đã hoàn thành bài thi trắc nghiệm. Chi tiết số câu đúng và sai hiển thị ở bảng dưới.</div>
+
+            <div class="stats-grid">
+                <div class="stat-item">
+                    <div class="stat-val correct" th:text="${correctCount}">18</div>
+                    <div class="stat-lbl">Câu đúng</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-val wrong" th:text="${wrongCount}">6</div>
+                    <div class="stat-lbl">Câu sai</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-val total" th:text="${test.questions.size()}">24</div>
+                    <div class="stat-lbl">Tổng số câu</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Chi tiết bài làm -->
+        <div class="results-header">Chi tiết đáp án & giải thích</div>
+
+        <div class="question-list">
+            <div class="question-card" 
+                 th:each="question, stat : ${test.questions}"
+                 th:classappend="${questionResults.get(question.id + '')} ? 'is-correct' : 'is-wrong'">
+                
+                <div class="question-header">
+                    <span class="q-number" th:text="'Câu ' + ${stat.count}">Câu 1</span>
+                    <span class="q-status-tag" th:text="${questionResults.get(question.id + '')} ? 'ĐÚNG' : 'SAI'">TRẠNG THÁI</span>
+                </div>
+
+                <!-- Hiện đoạn văn đọc hiểu nếu có -->
+                <div class="passage-section" th:if="${question.group != null}">
+                    <strong style="display: block; margin-bottom: 6px;" th:text="${question.group.title}">Đoạn văn đọc hiểu</strong>
+                    <div th:utext="${question.group.passage}">Nội dung đoạn văn...</div>
+                </div>
+
+                <div class="question-content" th:text="${question.content}">Nội dung câu hỏi...</div>
+
+                <div class="answers">
+                    <!-- Duyệt qua các đáp án của câu hỏi -->
+                    <div class="answer" 
+                         th:each="answer : ${question.answers}"
+                         th:classappend="${answer.isCorrect} ? 'correct-answer' : (${selectedAnswers.get(question.id + '') != null && selectedAnswers.get(question.id + '').equals(answer.id)} ? 'wrong-user-choice' : '')">
+                        
+                        <div class="answer-left">
+                            <div class="label" th:text="${answer.label}">A</div>
+                            <span th:text="${answer.content}">Nội dung đáp án</span>
+                        </div>
+                        
+                        <div class="choice-container">
+                            <!-- Trường hợp 1: Đáp án đúng của hệ thống -->
+                            <span class="badge-info" th:if="${answer.isCorrect}">
+                                <i class="fa-solid fa-check"></i> Đáp án đúng
+                            </span>
+                            <!-- Trường hợp 2: Lựa chọn sai của thí sinh -->
+                            <span class="badge-info" th:if="${!answer.isCorrect && selectedAnswers.get(question.id + '') != null && selectedAnswers.get(question.id + '').equals(answer.id)}">
+                                <i class="fa-solid fa-xmark"></i> Bạn chọn sai
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

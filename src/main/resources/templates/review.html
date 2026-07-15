@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+    <title>Xem lại bài làm - THPT Online Exam</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap');
+
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: #f8fafc;
+            color: #0f172a;
+            padding-bottom: 100px;
+        }
+
+        .header {
+            position: sticky;
+            top: 0;
+            height: 70px;
+            background: #ffffff;
+            border-bottom: 1px solid #e2e8f0;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 24px;
+            z-index: 100;
+            box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .btn-back {
+            height: 40px;
+            padding: 0 16px;
+            border-radius: 10px;
+            border: 1px solid #cbd5e1;
+            background: #ffffff;
+            color: #334155;
+            font-weight: 600;
+            font-size: 14px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.2s;
+        }
+
+        .btn-back:hover {
+            background: #f8fafc;
+            border-color: #94a3b8;
+        }
+
+        .logo img {
+            height: 32px;
+        }
+
+        .tende {
+            font-size: 16px;
+            font-weight: 700;
+            color: #1e293b;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 40px auto;
+            padding: 0 20px;
+        }
+
+        .review-banner {
+            background: #eff6ff;
+            border: 1px solid #bfdbfe;
+            border-radius: 16px;
+            padding: 24px;
+            margin-bottom: 30px;
+            display: flex;
+            align-items: flex-start;
+            gap: 16px;
+        }
+
+        .review-banner i {
+            font-size: 24px;
+            color: #2563eb;
+            margin-top: 2px;
+        }
+
+        .review-banner h3 {
+            margin: 0 0 6px 0;
+            font-size: 16px;
+            font-weight: 700;
+            color: #1e40af;
+        }
+
+        .review-banner p {
+            margin: 0;
+            font-size: 14px;
+            line-height: 1.5;
+            color: #1e3a8a;
+        }
+
+        .question-card {
+            background: #ffffff;
+            border: 1px solid #e2e8f0;
+            border-radius: 16px;
+            padding: 28px;
+            margin-bottom: 24px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+        }
+
+        .question-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 16px;
+            border-bottom: 1px solid #f1f5f9;
+            padding-bottom: 12px;
+        }
+
+        .q-number {
+            font-size: 15px;
+            font-weight: 700;
+            color: #0f172a;
+            text-transform: uppercase;
+        }
+
+        .q-tag {
+            font-size: 11px;
+            font-weight: 600;
+            padding: 4px 8px;
+            background: #f1f5f9;
+            color: #475569;
+            border-radius: 12px;
+        }
+
+        .passage-section {
+            background: #f8fafc;
+            border-left: 4px solid #cbd5e1;
+            padding: 16px;
+            border-radius: 0 8px 8px 0;
+            margin-bottom: 18px;
+            font-size: 14px;
+            line-height: 1.6;
+            color: #475569;
+            max-height: 200px;
+            overflow-y: auto;
+        }
+
+        .question-content {
+            font-size: 15px;
+            line-height: 1.6;
+            color: #334155;
+            font-weight: 600;
+            margin-bottom: 20px;
+        }
+
+        .answers {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .answer {
+            display: flex;
+            align-items: center;
+            padding: 12px 16px;
+            border-radius: 10px;
+            border: 1px solid #e2e8f0;
+            background: #ffffff;
+            font-size: 14px;
+            font-weight: 500;
+            color: #64748b;
+        }
+
+        .answer.selected {
+            border-color: #2563eb;
+            background: #eff6ff;
+            color: #1e40af;
+            font-weight: 600;
+            box-shadow: 0 0 0 1px #2563eb;
+        }
+
+        .label {
+            width: 24px;
+            height: 24px;
+            border-radius: 6px;
+            background: #f1f5f9;
+            color: #64748b;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            margin-right: 12px;
+            font-size: 12px;
+        }
+
+        .answer.selected .label {
+            background: #2563eb;
+            color: #ffffff;
+        }
+
+        /* Bottom Bar */
+        .bottom-bar {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 80px;
+            background: #ffffff;
+            border-top: 1px solid #e2e8f0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0 24px;
+            box-shadow: 0 -4px 12px rgba(0,0,0,0.03);
+            z-index: 99;
+        }
+
+        .btn-submit {
+            height: 48px;
+            padding: 0 40px;
+            border-radius: 12px;
+            background: #10b981;
+            color: #ffffff;
+            border: none;
+            font-weight: 600;
+            font-size: 15px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.2s;
+            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.2);
+        }
+
+        .btn-submit:hover {
+            background: #059669;
+            box-shadow: 0 4px 16px rgba(16, 185, 129, 0.3);
+        }
+
+        @media (max-width: 640px) {
+            .tende {
+                font-size: 14px;
+                max-width: 180px;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                white-space: nowrap;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="header-left">
+            <button class="btn-back" onclick="history.back()">
+                <i class="fa-solid fa-arrow-left"></i> Quay lại sửa bài
+            </button>
+            <div class="logo"><img src="/images/logo3.png" alt="DOV THPT"></div>
+            <div class="tende" th:text="${test.title}">Tên đề thi</div>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="review-banner">
+            <i class="fa-solid fa-circle-info"></i>
+            <div>
+                <h3>Kiểm tra lại bài làm</h3>
+                <p>Dưới đây là danh sách tất cả các câu hỏi và các phương án bạn đã lựa chọn. Hãy soát lại thật kỹ trước khi bấm "Nộp bài chính thức" ở thanh công cụ phía dưới.</p>
+            </div>
+        </div>
+
+        <div class="question-list">
+            <div class="question-card" th:each="question, stat : ${test.questions}">
+                <div class="question-header">
+                    <span class="q-number" th:text="'Câu ' + ${stat.count}">Câu 1</span>
+                    <span class="q-tag" th:text="${question.group != null ? 'Câu hỏi nhóm' : 'Câu hỏi đơn'}">Loại câu</span>
+                </div>
+
+                <!-- Hiện đoạn văn đọc hiểu nếu có -->
+                <div class="passage-section" th:if="${question.group != null}">
+                    <strong style="display: block; margin-bottom: 6px;" th:text="${question.group.title}">Đoạn văn đọc hiểu</strong>
+                    <div th:utext="${question.group.passage}">Nội dung đoạn văn...</div>
+                </div>
+
+                <div class="question-content" th:text="${question.content}">Nội dung câu hỏi...</div>
+
+                <div class="answers">
+                    <!-- Chỉ hiển thị đáp án duy nhất thí sinh đã lựa chọn cho câu hỏi này -->
+                    <div class="answer selected" 
+                         th:each="answer : ${question.answers}"
+                         th:if="${selectedAnswers.get(question.id + '') != null && selectedAnswers.get(question.id + '').equals(answer.id)}">
+                        <div class="label" th:text="${answer.label}">A</div>
+                        <span th:text="${answer.content}">Nội dung đáp án</span>
+                    </div>
+                    <!-- Trường hợp thí sinh chưa chọn đáp án nào (phòng ngừa lỗi logic) -->
+                    <div class="answer" style="border-color: #fca5a5; background: #fef2f2; color: #b91c1c;"
+                         th:if="${selectedAnswers.get(question.id + '') == null}">
+                        <i class="fa-solid fa-triangle-exclamation" style="margin-right: 8px;"></i>
+                        <span>Chưa chọn đáp án cho câu hỏi này</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="bottom-bar">
+        <!-- Form ẩn để gửi dữ liệu đáp án lên API submit -->
+        <form th:action="@{/submitdethi/{id}(id=${test.id})}" method="post">
+            <input type="hidden" 
+                   th:each="entry : ${selectedAnswers}" 
+                   th:name="'question_' + ${entry.key}" 
+                   th:value="${entry.value}">
+            <button type="submit" class="btn-submit">
+                <i class="fa-solid fa-paper-plane"></i> Nộp bài chính thức
+            </button>
+        </form>
+    </div>
+</body>
+</html>

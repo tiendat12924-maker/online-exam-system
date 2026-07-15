@@ -6,7 +6,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
     <link rel="stylesheet" th:href="@{/css/index.css}">
     <link rel="stylesheet" th:href="@{/css/chitietde.css}">
-    <title>Document</title> 
+    <title>Làm bài thi - THPT Online Exam</title> 
 </head>
 <body>
     <div class="modal-overlay" id="modal">
@@ -19,183 +19,167 @@
             </p>
             <div class="modal-actions">
                 <button class="btn btn-gray" onclick="closeModal()">Tiếp tục làm bài</button>
-                <button class="btn btn-red">Thoát</button>
+                <button class="btn btn-red" type="button" onclick="location.href='/'">Thoát</button>
             </div>
+        </div>
+    </div>
 
-        </div>
-    </div>
-    <div class="header">
-        <div class="header-left">
-            <button onclick="openModal()" style="border: none;">
-                <div class="exit-test">
-                    <i class="fa-solid fa-xmark"></i> 
-                </div>
-            </button>
-            <div class="logo"><img src="/images/logo3.png" alt=""></div>
-            <div class="tende">             
-                Đề thi thử tốt nghiệp THPT môn Tiếng Anh Cụm trường THPT Số 1 Sở GD&ĐT Hà Nội năm 2026
-            </div>
-        </div>
-        <div class="header-right">
-		    <div class="timer">
-		        <span class="icon">⏱</span>
-		        <span id="time"
-		              th:data-duration="${test.duration}">
-		            00:00
-		        </span>
-		    </div>
-		    <button type="button" onclick="finish()">
-		        Hoàn thành
-		    </button>
-		</div>
-    </div>
-    <div class="body">
-        <div class="multiple-choice-test" style="display: none;">
-            <div class="body-left">
-                <div class="body-left-require">
-                    <div class="require-title">YÊU CẦU CHUNG</div>
-                    <div class="require-content">Question 1 - 8.
-                        <span style="font-weight: 600;">Read the following passage and mark the letter A, B, C, or D to indicate the correct answer
-                        to each of the questions from 1 to 8.</span>
+    <!-- Sử dụng display: contents để form không ảnh hưởng đến CSS flexbox của body -->
+    <form id="examForm" th:action="@{/reviewdethi/{id}(id=${test.id})}" method="post" style="display: contents;">
+        <div class="header">
+            <div class="header-left">
+                <button type="button" onclick="openModal()" style="border: none; background: none; padding: 0;">
+                    <div class="exit-test">
+                        <i class="fa-solid fa-xmark"></i> 
                     </div>
-                </div>
-                <div class="body-left-question">
-                    <div class="paragraph">Entrepreneurship in multicultural environments offers unique perspectives for business development.
-                        These diverse settings bring together people with different backgrounds, languages, and cultural values, 
-                        creating dynamic marketplaces for innovative ideas. Entrepreneurs operating across cultural boundaries must navigate
-                        unfamiliar business practices while leveraging their distinct backgrounds. This cultural exchange often leads to creative 
-                        solutions that might not emerge in homogeneous environments.
-                    </div>
-                    <div class="paragraph">Despite the advantages, entrepreneurs face significant challenges when operating in multicultural contexts.
-                        Communication barriers frequently arise when team members speak different languages or interpret messages differently.
-                        Cultural misunderstandings about business etiquette, negotiation styles, and decision-making processes can hinder progress
-                        and create tension. Additionally, regulatory differences between countries require entrepreneurs to adapt their business
-                            models and comply with various legal frameworks, which can be costly and time-consuming.
-                    </div>
-                    <div class="paragraph">On the other hand, multicultural environments present valuable opportunities for growth and innovation.
-                        Diverse teams typically demonstrate enhanced problem-solving capabilities by approaching challenges from multiple perspectives.
-                        Access to international markets allows entrepreneurs to scale their businesses beyond local limitations. Furthermore,
-                        multicultural entrepreneurs often identify untapped market needs that competitors might overlook. These opportunities enable
-                            businesses to develop products and services that address specific cultural preferences while maintaining universal appeal.
-                    </div>
-                    <div class="paragraph">To succeed in multicultural settings, entrepreneurs must develop cultural intelligence and adaptability.
-                        This includes learning about different cultural norms, practicing active listening, and remaining flexible when unexpected
-                        situations arise. Building diverse networks helps entrepreneurs access local knowledge and establish credibility in new market
-                        s. Those who embrace cultural differences rather than merely tolerating them position themselves to thrive in our increasingly
-                        interconnected global economy.
-                    </div>
+                </button>
+                <div class="logo"><img src="/images/logo3.png" alt="Logo"></div>
+                <div class="tende" th:text="${test.title}">             
+                    Đề thi thử tốt nghiệp THPT môn Tiếng Anh Cụm trường THPT Số 1 Sở GD&ĐT Hà Nội năm 2026
                 </div>
             </div>
-            <div class="body-right">
-                <div class="sentence">
-                    <span class="numerical">1</span>
-                    Câu 1
+            <div class="header-right">
+                <div class="timer">
+                    <span class="icon">⏱</span>
+                    <span id="time" th:data-duration="${test.duration}">
+                        00:00
+                    </span>
                 </div>
-                <div class="body-right-question">
-                    Which of the following is NOT mentioned as a challenge for entrepreneurs in multicultural environments?
-                </div>
-                <div class="number-answer">
-                    <div class="number">A</div>
-                    <div class="answer-multiple">cultural misunderstandings</div>
-                </div>
-                <div class="number-answer">
-                    <div class="number">B</div>
-                    <div class="answer-multiple">communication barriers</div>
-                </div>
-                <div class="number-answer">
-                    <div class="number">C</div>
-                    <div class="answer-multiple">regulatory differences</div>
-                </div>
-                <div class="number-answer">
-                    <div class="number">D</div>
-                    <div class="answer-multiple">financial constraints</div>
-                </div>
-            </div>
-        </div>       
-        <div class="single-choice-test"> 
-	        <div class="question-item" th:each="question,stat : ${test.questions}" th:id="'question-'+${stat.count}" th:classappend="${stat.index==0}?' active':''">	
-		        <div class="question-header">
-		            <div class="question-number">
-		                <div class="circle"
-		                     th:text="${stat.count}"></div>		
-		                <strong>CÂU <span th:text="${stat.count}"></span></strong>
-		            </div>
-		        </div>	
-		        <div class="question-content"
-		             th:text="${question.content}">
-		        </div>	
-		        <div class="answers">	
-		            <label class="answer" th:each="answer : ${question.answers}">	
-		                <div class="answer-left">
-		                    <div class="label"
-		                         th:text="${answer.label}">
-		                    </div>
-		                    <span th:text="${answer.content}"></span>
-		                </div>	
-		                <input type="radio" th:name="'question_'+${question.id}" th:value="${answer.id}">
-		            </label>	
-		        </div>	
-		    </div>
-        </div>
-    </div>
-    <div class="footer">
-        <div class="footer-top">
-            <div class="number-bar"> 
-                <div class="numbers"> 
-                    <div class="num"
-				         th:each="question,stat : ${test.questions}"
-				         th:text="${stat.count}"
-				         th:data-index="${stat.index}">
-				    </div> 
-                </div> 
+                <button type="button" id="btn-finish" class="btn-finish disabled" onclick="finish()">
+                    Hoàn thành
+                </button>
             </div>
         </div>
-        <div class="footer-bottom">
-            <div class="questionnaire">
-                <div class="menu-btn" onclick="togglePopup()">
-                    <i class="fa-solid fa-bars"></i>
+
+        <div class="body">
+            <div class="test-container">
+                <div class="question-item" th:each="question,stat : ${test.questions}" th:id="'question-'+${stat.count}" th:classappend="${stat.index==0}?' active':''">	
+                    
+                    <!-- TH 1: Câu trắc nghiệm đơn (SINGLE) -->
+                    <div class="single-layout" th:if="${question.group == null}">
+                        <div class="question-card">
+                            <div class="question-header">
+                                <span class="q-number" th:text="'Câu ' + ${stat.count}">Câu 1</span>
+                                <span class="q-tag-single">Câu hỏi đơn</span>
+                            </div>
+                            <div class="question-content" th:text="${question.content}">
+                                Nội dung câu hỏi...
+                            </div>	
+                            <div class="answers">	
+                                <label class="answer" th:each="answer : ${question.answers}">	
+                                    <div class="answer-left">
+                                        <div class="label" th:text="${answer.label}">A</div>
+                                        <span th:text="${answer.content}">Nội dung đáp án</span>
+                                    </div>	
+                                    <input type="radio" th:name="'question_'+${question.id}" th:value="${answer.id}" th:data-qid="${question.id}" th:id="'ans-' + ${answer.id}">
+                                </label>	
+                            </div>	
+                        </div>
+                    </div>
+
+                    <!-- TH 2: Câu trắc nghiệm nhóm đọc hiểu (MULTIPLE) -->
+                    <div class="group-layout" th:if="${question.group != null}">
+                        <!-- Bên trái: Đề chung + chỉ dẫn -->
+                        <div class="group-left">
+                            <div class="passage-card">
+                                <div class="passage-header">
+                                    <i class="fa-solid fa-file-invoice"></i>
+                                    <span th:text="${question.group.title != null && !question.group.title.isEmpty() ? question.group.title : 'Đoạn văn đọc hiểu'}">Đoạn văn đọc hiểu</span>
+                                </div>
+                                <div class="passage-instruction" th:if="${question.group.instruction != null}" th:text="${question.group.instruction}">
+                                    Đọc đoạn văn và trả lời các câu hỏi.
+                                </div>
+                                <div class="passage-content" th:utext="${question.group.passage}">
+                                    Nội dung đoạn văn ngữ liệu...
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Bên phải: Câu hỏi con -->
+                        <div class="group-right">
+                            <div class="question-card">
+                                <div class="question-header">
+                                    <span class="q-number" th:text="'Câu ' + ${stat.count}">Câu 2</span>
+                                    <span class="q-tag-group">Câu hỏi nhóm</span>
+                                </div>
+                                <div class="question-content" th:text="${question.content}">
+                                    Nội dung câu hỏi con...
+                                </div>	
+                                <div class="answers">	
+                                    <label class="answer" th:each="answer : ${question.answers}">	
+                                        <div class="answer-left">
+                                            <div class="label" th:text="${answer.label}">A</div>
+                                            <span th:text="${answer.content}">Nội dung đáp án</span>
+                                        </div>	
+                                        <input type="radio" th:name="'question_'+${question.id}" th:value="${answer.id}" th:data-qid="${question.id}" th:id="'ans-' + ${answer.id}">
+                                    </label>	
+                                </div>	
+                            </div>
+                        </div>
+                    </div>
+
                 </div>
-                <div class="popup" id="popup">
-                    <div class="popup-header">
-                        <span>Bảng câu hỏi</span>
-                        <span class="close" onclick="togglePopup()">
-                            <i class="fa-solid fa-xmark"></i>
-                        </span>
+            </div>
+        </div>
+
+        <div class="footer">
+            <div class="footer-top">
+                <button type="button" class="btn-nav" id="btn-prev" onclick="prevQuestion()">
+                    <i class="fa-solid fa-chevron-left"></i> Câu trước
+                </button>
+                <div class="number-bar"> 
+                    <div class="numbers"> 
+                        <div class="num"
+                             th:each="question,stat : ${test.questions}"
+                             th:text="${stat.count}"
+                             th:data-index="${stat.index}"
+                             th:id="'num-nav-' + ${question.id}">
+                        </div> 
+                    </div> 
+                </div>
+                <button type="button" class="btn-nav" id="btn-next" onclick="nextQuestion()">
+                    Câu sau <i class="fa-solid fa-chevron-right"></i>
+                </button>
+            </div>
+            <div class="footer-bottom">
+                <div class="questionnaire">
+                    <div class="menu-btn" onclick="togglePopup()">
+                        <i class="fa-solid fa-bars"></i>
                     </div>
-                    <div class="status">
-                        <div><span class="box done"></span> Đã làm</div>
-                        <div><span class="box"></span> Chưa làm</div>
-                    </div>
-                    <div class="section">
-                        <p>Phần 1 (<span th:text="${test.questions.size()}"></span> CÂU)</p>
-                        <div class="grid">
-						    <button th:each="question, stat : ${test.questions}"
-						            th:text="${stat.count}"
-						            th:onclick="'goToQuestion(' + ${stat.count} + ')'">
-						    </button>
-						</div>
-                    </div>
-                    <div class="section">
-                        <p>Phần 2 (4 CÂU)</p>
-                        <div class="grid small">
-                            <button>1</button>
-                            <button>2</button>
-                            <button>3</button>
-                            <button>4</button>
+                    <div class="popup" id="popup">
+                        <div class="popup-header">
+                            <span>Bảng câu hỏi</span>
+                            <span class="close" onclick="togglePopup()">
+                                <i class="fa-solid fa-xmark"></i>
+                            </span>
+                        </div>
+                        <div class="status">
+                            <div><span class="box done"></span> Đã làm</div>
+                            <div><span class="box"></span> Chưa làm</div>
+                        </div>
+                        <div class="section">
+                            <p>Danh sách câu hỏi (<span th:text="${test.questions.size()}"></span> câu)</p>
+                            <div class="grid">
+                                <button type="button" th:each="question, stat : ${test.questions}"
+                                        th:text="${stat.count}"
+                                        th:onclick="'goToQuestion(' + ${stat.count} + ')'"
+                                        th:id="'popup-btn-' + ${question.id}">
+                                </button>
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
-            <div id="progressBox" class="progress">
-                Phần 1 | <span id="answered">1</span>/24
-            </div>
-            <div id="progressBox" class="progress">
-                Phần 2 | <span id="answered">1</span>/8
+                <div class="progress-info">
+                    Tiến độ làm bài: <span id="answered-count" style="font-weight: 700;">0</span> / <span th:text="${test.questions.size()}" style="font-weight: 700;">0</span> câu
+                </div>
             </div>
         </div>
-        
-        
-    </div>
+    </form>
+    
+    <script th:inline="javascript">
+        /*<![CDATA[*/
+        const TOTAL_QUESTIONS = /*[[${test.questions.size()}]]*/ 24;
+        /*]]>*/
+    </script>
     <script th:src="@{/js/chitietde.js}"></script>
 </body>
 </html>
