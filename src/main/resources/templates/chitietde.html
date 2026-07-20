@@ -23,8 +23,6 @@
             </div>
         </div>
     </div>
-
-    <!-- Sử dụng display: contents để form không ảnh hưởng đến CSS flexbox của body -->
     <form id="examForm" th:action="@{/reviewdethi/{id}(id=${test.id})}" method="post" style="display: contents;">
         <div class="header">
             <div class="header-left">
@@ -34,15 +32,13 @@
                     </div>
                 </button>
                 <div class="logo"><img src="/images/logo3.png" alt="Logo"></div>
-                <div class="tende" th:text="${test.title}">             
-                    Đề thi thử tốt nghiệp THPT môn Tiếng Anh Cụm trường THPT Số 1 Sở GD&ĐT Hà Nội năm 2026
+                <div class="tende" th:text="${test.title}">                               
                 </div>
             </div>
             <div class="header-right">
                 <div class="timer">
                     <span class="icon">⏱</span>
-                    <span id="time" th:data-duration="${test.duration}">
-                        00:00
+                    <span id="time" th:data-duration="${test.duration}">                     
                     </span>
                 </div>
                 <button type="button" id="btn-finish" class="btn-finish disabled" onclick="finish()">
@@ -54,8 +50,6 @@
         <div class="body">
             <div class="test-container">
                 <div class="question-item" th:each="question,stat : ${test.questions}" th:id="'question-'+${stat.count}" th:classappend="${stat.index==0}?' active':''">	
-                    
-                    <!-- TH 1: Câu trắc nghiệm đơn (SINGLE) -->
                     <div class="single-layout" th:if="${question.group == null}">
                         <div class="question-card">
                             <div class="question-header">
@@ -77,9 +71,7 @@
                         </div>
                     </div>
 
-                    <!-- TH 2: Câu trắc nghiệm nhóm đọc hiểu (MULTIPLE) -->
                     <div class="group-layout" th:if="${question.group != null}">
-                        <!-- Bên trái: Đề chung + chỉ dẫn -->
                         <div class="group-left">
                             <div class="passage-card">
                                 <div class="passage-header">
@@ -94,7 +86,6 @@
                                 </div>
                             </div>
                         </div>
-                        <!-- Bên phải: Câu hỏi con -->
                         <div class="group-right">
                             <div class="question-card">
                                 <div class="question-header">
@@ -116,7 +107,6 @@
                             </div>
                         </div>
                     </div>
-
                 </div>
             </div>
         </div>

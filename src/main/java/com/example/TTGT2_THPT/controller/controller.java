@@ -4,8 +4,8 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 import java.util.stream.Collectors;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -17,7 +17,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseBody;
-
 import com.example.TTGT2_THPT.entity.Answers;
 import com.example.TTGT2_THPT.entity.Questions;
 import com.example.TTGT2_THPT.entity.QuestionsGroup;
@@ -33,6 +32,7 @@ import com.example.TTGT2_THPT.repository.RepositorySubject;
 import com.example.TTGT2_THPT.repository.RepositoryTest;
 import com.example.TTGT2_THPT.repository.RepositoryUser;
 import com.example.TTGT2_THPT.service.ServiceSubject;
+import com.example.TTGT2_THPT.service.ServiceTest;
 import com.example.TTGT2_THPT.service.ServiceUser;
 
 import jakarta.servlet.http.HttpSession;
@@ -55,47 +55,38 @@ public class controller {
 	RepositoryQuestion repoQuestion;
 	@Autowired
 	RepositoryQuestionGroup repoGroup;
-	
+	@Autowired
+	ServiceTest svTest;
 	@GetMapping("/")
 	public String home() {
 		return "redirect:/index";
 	}
-
 	@GetMapping("/index")
 	public String index(Model model) {
 		List<Subjects> subjects = repoSub.findByStatus(true);
 		model.addAttribute("subjects", subjects);
 		return "index";
-	}
-	
+	}	
 	@GetMapping("/admin")
     public String admin(Model model) {
         List<Test> tests = repoTest.findAll(org.springframework.data.domain.Sort.by(org.springframework.data.domain.Sort.Direction.DESC, "createdAt"));
-        model.addAttribute("tests", tests);
-        
+        model.addAttribute("tests", tests);      
         long totalTests = repoTest.count();
-        model.addAttribute("totalTests", totalTests);
-        
+        model.addAttribute("totalTests", totalTests);        
         long totalUsers = repoUser.count();
-        model.addAttribute("totalUsers", totalUsers);
-        
+        model.addAttribute("totalUsers", totalUsers);        
         List<Subjects> subjects = repoSub.findAll();
-        model.addAttribute("subjects", subjects);
-        
+        model.addAttribute("subjects", subjects);       
         List<User> users = repoUser.findAll();
-        model.addAttribute("users", users);
-        
+        model.addAttribute("users", users);     
         long totalQuestions = repoQuestion.count();
-        model.addAttribute("totalQuestions", totalQuestions);
-        
+        model.addAttribute("totalQuestions", totalQuestions);     
         Map<Long, Long> testCounts = tests.stream()
             .filter(t -> t.getSubject() != null)
             .collect(Collectors.groupingBy(t -> t.getSubject().getId(), Collectors.counting()));
-        model.addAttribute("testCounts", testCounts);
-        
+        model.addAttribute("testCounts", testCounts);      
         return "admin";
     }
-
 	@PostMapping("/admin/api/add-subject")
     @ResponseBody
     public ResponseEntity<?> addSubject(@RequestBody Subjects subject) {
@@ -105,29 +96,23 @@ public class controller {
         if (subject.getCode() == null || subject.getCode().trim().isEmpty()) {
             return ResponseEntity.badRequest().body("Mã môn học không được để trống");
         }
-        
         if (subject.getDescription() == null || subject.getDescription().trim().isEmpty()) {
             subject.setDescription("Môn học " + subject.getName());
         }
-
         if (repoSub.findByCode(subject.getCode()).isPresent()) {
             return ResponseEntity.badRequest().body("Mã môn học đã tồn tại");
-        }
-        
+        }       
         boolean existsByName = repoSub.findAll().stream().anyMatch(s -> s.getName().equalsIgnoreCase(subject.getName()));
         if (existsByName) {
             return ResponseEntity.badRequest().body("Tên môn học đã tồn tại");
         }
-
         repoSub.save(subject);
         return ResponseEntity.ok("Thêm môn học thành công");
     }
-
 	@PostMapping("/reviewdethi/{id}")
 	public String reviewDeThi(@PathVariable Integer id, @RequestParam Map<String, String> allParams, Model model) {
 	    Test test = repoTest.findById(id)
-	            .orElseThrow(() -> new RuntimeException("Không tìm thấy đề"));
-	    
+	            .orElseThrow(() -> new RuntimeException("Không tìm thấy đề"));	    
 	    Map<String, Long> selectedAnswers = new java.util.HashMap<>();
 	    for (Map.Entry<String, String> entry : allParams.entrySet()) {
 	        if (entry.getKey().startsWith("question_")) {
@@ -136,42 +121,35 @@ public class controller {
 	                Long answerId = Long.parseLong(entry.getValue());
 	                selectedAnswers.put(questionIdStr, answerId);
 	            } catch (NumberFormatException e) {
-	                // Bỏ qua lỗi
 	            }
 	        }
 	    }
-	    
 	    model.addAttribute("test", test);
 	    model.addAttribute("selectedAnswers", selectedAnswers);
 	    return "review";
 	}
-
 	@PostMapping("/submitdethi/{id}")
 	public String submitDeThi(@PathVariable Integer id, @RequestParam Map<String, String> allParams, Model model) {
 	    Test test = repoTest.findById(id)
 	            .orElseThrow(() -> new RuntimeException("Không tìm thấy đề"));
-	    
 	    int correctCount = 0;
 	    int wrongCount = 0;
 	    Map<String, Boolean> questionResults = new java.util.HashMap<>();
-	    Map<String, Long> selectedAnswers = new java.util.HashMap<>();
-	    
+	    Map<String, Long> selectedAnswers = new java.util.HashMap<>();	    
 	    for (Questions question : test.getQuestions()) {
 	        String paramValue = allParams.get("question_" + question.getId());
 	        String qIdStr = String.valueOf(question.getId());
 	        if (paramValue != null && !paramValue.trim().isEmpty()) {
 	            try {
 	                Long selectedAnsId = Long.parseLong(paramValue);
-	                selectedAnswers.put(qIdStr, selectedAnsId);
-	                
+	                selectedAnswers.put(qIdStr, selectedAnsId);               
 	                boolean isCorrect = false;
 	                for (Answers ans : question.getAnswers()) {
 	                    if (ans.getId().equals(selectedAnsId) && ans.getIsCorrect()) {
 	                        isCorrect = true;
 	                        break;
 	                    }
-	                }
-	                
+	                }	             
 	                if (isCorrect) {
 	                    correctCount++;
 	                    questionResults.put(qIdStr, true);
@@ -188,30 +166,24 @@ public class controller {
 	            questionResults.put(qIdStr, false);
 	        }
 	    }
-	    
 	    double score = 0.0;
 	    if (test.getQuestions() != null && !test.getQuestions().isEmpty()) {
 	        score = (correctCount * 10.0) / test.getQuestions().size();
 	        score = Math.round(score * 100.0) / 100.0;
 	    }
-	    
 	    model.addAttribute("test", test);
 	    model.addAttribute("correctCount", correctCount);
 	    model.addAttribute("wrongCount", wrongCount);
 	    model.addAttribute("score", score);
 	    model.addAttribute("questionResults", questionResults);
 	    model.addAttribute("selectedAnswers", selectedAnswers);
-	    
 	    return "ketqua";
 	}
-	
-	
 	@GetMapping("/login")
 	public String showLogin(Model model) {
 		model.addAttribute("mode", "email");
 	    return "login";
 	}
-
 	@PostMapping("/login")
 	public String doLogin(@RequestParam String password,
 	                      Model model,	                      
@@ -236,19 +208,16 @@ public class controller {
 	    System.out.println("===> USER");
 	    return "redirect:/index";
 	}
-
 	@GetMapping("/logout")
 	public String logout(HttpSession session) {
 	    session.invalidate();
 	    return "redirect:/index";
 	}
-	
 	@GetMapping("/register")
     public String showForm(Model model) {
         model.addAttribute("mode", "email");
         return "login";
     }
-	
 	@PostMapping("/check-email")
 	public String checkEmail(@RequestParam String email,
 	                         Model model,
@@ -265,7 +234,6 @@ public class controller {
 	    }
 	    return "login";
 	}
-
 	@PostMapping("/register")
 	public String register(@ModelAttribute User user,
 	                       @RequestParam("confirmPassword") String confirmPassword,	                     
@@ -281,7 +249,6 @@ public class controller {
 	    svUser.save(user);
 	    return "redirect:/index";
 	}
-	
 	@GetMapping("/trangdethi")
 	public String trangDeThi(@RequestParam("subjectId") Long subjectId, Model model, Long id) {
 	    List<Subjects> subjects = svSubject.findAll();
@@ -295,7 +262,6 @@ public class controller {
 	    model.addAttribute("tests", tests);
 	    return "trangdethi";
 	}
-	
 	@GetMapping("/chitietde/{id}")
 	public String chiTietDe(@PathVariable Integer id, Model model) {
 	    Test test = repoTest.findById(id)
@@ -303,12 +269,10 @@ public class controller {
 	    model.addAttribute("test", test);
 	    return "chitietde";
 	}
-	
 	@GetMapping("/uploadtest")
     public String uploadTest() {
         return "uploadtest";
     }
-	
 	@PostMapping("/uploadtest")
     public String saveTest(@ModelAttribute Test test) {
         LocalDateTime now = LocalDateTime.now();
@@ -321,7 +285,6 @@ public class controller {
         Test savedTest = repoTest.save(test);
         return "redirect:/uploaddethi/" + savedTest.getId();
     }
-	
 	@GetMapping("/uploaddethi/{id}")
 	public String uploadDeThi(
 	        @PathVariable Integer id,
@@ -335,7 +298,6 @@ public class controller {
 	    );
 	    return "uploaddethi";
 	}
-	
 	@PostMapping("/admin/question/save")
 	public String saveQuestion(
 						        @RequestParam Integer testId,
@@ -357,7 +319,6 @@ public class controller {
 	    Test test = repoTest.findById(testId)
 	            .orElseThrow(() -> new RuntimeException("Không tìm thấy đề"));
 	    QuestionsType type = QuestionsType.valueOf(questionType);
-
 	    if (type == QuestionsType.SINGLE) {
 	        Questions question = new Questions();
 	        question.setContent(content);
@@ -368,7 +329,6 @@ public class controller {
 	        saveAnswer(question, "B", answerB, correctAnswer);
 	        saveAnswer(question, "C", answerC, correctAnswer);
 	        saveAnswer(question, "D", answerD, correctAnswer);
-
 	    }
 	    else if (type == QuestionsType.MULTIPLE) {
 	        QuestionsGroup group = new QuestionsGroup();
@@ -436,5 +396,91 @@ public class controller {
 	            break;
 	    }
 	    repoAnswer.save(answer);
+	}
+	@GetMapping("/forgot-password")
+	public String showForgotPassword(HttpSession session,
+	                                 Model model){
+	    String email = (String) session.getAttribute("email");
+	    model.addAttribute("email", email);
+	    model.addAttribute("mode", "ForgotPassword");
+	    return "login";
+	}
+	
+	@PostMapping("/forgot-password")
+	public String forgotPassword(HttpSession session,
+	                             Model model) {
+	    String email = (String) session.getAttribute("email");
+	    if(email == null){
+	        return "redirect:/login";
+	    }
+	    User user = repoUser.findByEmail(email);
+	    if(user == null){
+	        model.addAttribute("mode","register");
+	        model.addAttribute("email",email);
+	        return "login";
+	    }
+	    String code = String.format("%06d",
+	            new Random().nextInt(1000000));
+	    user.setResetCode(code);
+	    user.setResetExpired( LocalDateTime.now().plusMinutes(5));
+	    repoUser.save(user);
+	    System.out.println();
+	    System.out.println("========== OTP ==========");
+	    System.out.println("Email : " + email);
+	    System.out.println("Code  : " + code);
+	    System.out.println("=========================");
+	    System.out.println();
+	    model.addAttribute("mode","verify");
+	    model.addAttribute("email",email);
+	    return "login";
+	}
+	
+	@PostMapping("/verify-code")
+	public String verifyCode(@RequestParam String code,
+	                         HttpSession session,
+	                         Model model){
+	    String email=(String)session.getAttribute("email");
+	    User user=repoUser.findByEmail(email);
+	    if(user==null){
+	        return "redirect:/login";
+	    }
+	    if(!code.equals(user.getResetCode())){
+	        model.addAttribute("mode","verify");
+	        model.addAttribute("demoCode",user.getResetCode());
+	        model.addAttribute("email",email);
+	        model.addAttribute("error","Sai mã xác nhận");
+	        return "login";
+	    }
+	    if(user.getResetExpired().isBefore(LocalDateTime.now())){
+	        model.addAttribute("mode","verify");
+	        model.addAttribute("demoCode",user.getResetCode());
+	        model.addAttribute("email",email);
+	        model.addAttribute("error","Mã đã hết hạn");
+	        return "login";
+	    }
+	    model.addAttribute("mode","reset");
+	    model.addAttribute("email",email);
+	    return "login";
+	}
+	
+	@PostMapping("/reset-password")
+	public String resetPassword(@RequestParam String password,
+	                            HttpSession session){
+
+	    String email=(String)session.getAttribute("email");
+
+	    User user=repoUser.findByEmail(email);
+
+	    user.setPassword(password);
+
+	    user.setResetCode(null);
+
+	    user.setResetExpired(null);
+
+	    repoUser.save(user);
+
+	    session.removeAttribute("email");
+
+	    return "redirect:/login";
 	}
 }

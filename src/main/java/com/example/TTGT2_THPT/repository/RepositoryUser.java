@@ -11,4 +11,5 @@ import com.example.TTGT2_THPT.entity.User;
 public interface RepositoryUser extends JpaRepository<User, Long> {
 
 	 User findByEmail(String email);
+	 User findByResetCode(String resetCode);
 }

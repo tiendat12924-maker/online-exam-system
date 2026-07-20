@@ -9,20 +9,11 @@ public class ExcelMappingDTO {
     private String answerCCol;
     private String answerDCol;
     private String correctAnswerCol;
-
-    // Getters and Setters
-    public String getQuestionContentCol() {
-        return questionContentCol;
-    }
-
-    public void setQuestionContentCol(String questionContentCol) {
-        this.questionContentCol = questionContentCol;
-    }
-
-    public String getPassageCol() {
-        return passageCol;
-    }
-
+    
+    public String getQuestionContentCol() { return questionContentCol;}
+    public void setQuestionContentCol(String questionContentCol) {this.questionContentCol = questionContentCol;}
+    
+    public String getPassageCol() {return passageCol;}
     public void setPassageCol(String passageCol) {
         this.passageCol = passageCol;
     }

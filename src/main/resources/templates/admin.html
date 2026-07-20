@@ -93,25 +93,20 @@
                     <table>
                         <thead>
                         <tr>
-                            <th>Email</th>
-                            <th>Ngày đăng ký</th>
-                            <th>Số bài làm</th>
-                            <th></th>
+                            <th>Email</th>                            
+                            <th>Số bài làm</th>                        
                         </tr>
                         </thead>
                         <tbody>
-                        <tr>
-                            <td>user1@gmail.com</td>
-                            <td>12/05/2024</td>
-                            <td>15</td>
-                            <td><button class="btn">Chi tiết</button></td>
-                        </tr>
-                        <tr>
-                            <td>user2@gmail.com</td>
-                            <td>18/05/2024</td>
-                            <td>8</td>
-                            <td><button class="btn">Chi tiết</button></td>
-                        </tr>
+                        <tr th:each="u, state : ${users}">
+                                    <td class="user-info">
+                                        <div>
+                                            <p class="email" th:text="${u.email}"></p>
+                                            <span class="name" th:text="${u.fullName}"></span>
+                                        </div>
+                                    </td>                                  
+                                    <td>0</td>                                                                   
+                                </tr>
                         </tbody>
                     </table>
                 </div>
@@ -125,23 +120,18 @@
                         <tr>
                             <th>Tên đề</th>
                             <th>Số câu</th>
-                            <th>Lượt làm</th>
-                            <th></th>
+                            <th>Lượt làm</th>                          
                         </tr>
                         </thead>
                         <tbody>
-                        <tr>
-                            <td>Toán cơ bản</td>
-                            <td>20</td>
-                            <td>245</td>
-                            <td><button class="btn">Chi tiết</button></td>
-                        </tr>
-                        <tr>
-                            <td>Lập trình C</td>
-                            <td>25</td>
-                            <td>198</td>
-                            <td><button class="btn">Chi tiết</button></td>
-                        </tr>
+                        	<tr th:each="test, state : ${tests}">				                
+					                <td>
+					                    <b th:text="${test.title}">Đề thi Toán - Cơ bản</b><br>
+					                    <span class="sub" th:text="${'Kiến thức năm ' + test.year}">Kiến thức lớp 10-12</span>
+					                </td>				                
+					                <td th:text="${test.questions != null ? test.questions.size() : 0}">20</td>
+					                <td>0</td>					                
+					            </tr>
                         </tbody>
                     </table>
                 </div>
@@ -193,8 +183,7 @@
                                 <option>Tất cả trạng thái</option>
                                 <option>Hoạt động</option>
                                 <option>Không hoạt động</option>
-                            </select>
-                            <input type="date">
+                            </select>                           
                             <button class="btn">Lọc</button>
                         </div>
                         <table class="user-table">
@@ -202,31 +191,27 @@
                                 <tr>
                                     <th>#</th>
                                     <th>User</th>
-                                    <th>Ngày đăng ký</th>
                                     <th>Trạng thái</th>
                                     <th>Số bài đã làm</th>
                                     <th>Hành động</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                <!-- sau này thay bằng th:each -->
                                 <tr th:each="u, state : ${users}">
                                     <td th:text="${state.count}">1</td>
                                     <td class="user-info">
                                         <img src="https://i.pravatar.cc/40" alt="">
                                         <div>
-                                            <p class="email" th:text="${u.email}">nguyenvana@gmail.com</p>
-                                            <span class="name" th:text="${u.fullName}">Nguyễn Văn A</span>
+                                            <p class="email" th:text="${u.email}"></p>
+                                            <span class="name" th:text="${u.fullName}"></span>
                                         </div>
                                     </td>
-                                    <td>12/05/2024</td>
                                     <td><span class="status active">Hoạt động</span></td>
                                     <td>0</td>
                                     <td class="actions">
-                                        <button class="icon-btn">👁</button>
-                                        <button class="icon-btn"><i class="fa-solid fa-chart-simple"></i></button>
+                                        <button class="icon-btn">👁</button>                                      
                                         <button class="icon-btn">⋮</button>
-                                    </td>
+                                    </td>                                   
                                 </tr>
                             </tbody>
                         </table>
@@ -255,15 +240,15 @@
                         </div>
                         <div class="info-list">
                             <div class="info-item">
-                                <span><i class="fa-regular fa-calendar-days"></i> Ngày đăng ký</span>
+                                <span><i class="fa-regular fa-calendar-days"></i>Ngày đăng ký</span>
                                 <p>12/05/2024 10:30</p>
                             </div>
                             <div class="info-item">
-                                <span><i class="fa-regular fa-envelope"></i> Email</span>
+                                <span><i class="fa-regular fa-envelope"></i>Email</span>
                                 <p>nguyenvana@gmail.com</p>
                             </div>
                             <div class="info-item">
-                                <span><i class="fa-solid fa-chart-simple"></i> Tổng số bài đã làm</span>
+                                <span><i class="fa-solid fa-chart-simple"></i>Tổng số bài đã làm</span>
                                 <p>15</p>
                             </div>
                             <div class="info-item">
@@ -383,9 +368,8 @@
 					                <th>Trạng thái</th>
 					                <th>Hành động</th>
 					            </tr>
-					        </thead>
-					
-					        <tbody>
+					        </thead>				
+					        <tbody class="table-test">
 					            <tr th:each="test, state : ${tests}">
 					                <td th:text="${state.count}">1</td>
 					                <td>
@@ -406,15 +390,12 @@
 					                            th:data-duration="${test.duration}"
 					                            th:data-created="${#temporals.format(test.createdAt, 'dd/MM/yyyy HH:mm')}"
 					                            th:data-updated="${test.updatedAt != null ? #temporals.format(test.updatedAt, 'dd/MM/yyyy HH:mm') : #temporals.format(test.createdAt, 'dd/MM/yyyy HH:mm')}"
-					                            th:data-difficulty="${test.difficulty}">👁</button>
-					                    <button>👤</button>
-					                    <button>📊</button>
+					                            th:data-difficulty="${test.difficulty}">👁</button>					                    
 					                    <button>⋮</button>
 					                </td>
 					            </tr>
 					        </tbody>
-					    </table>
-					
+					    </table>				
 					    <div class="pagination" id="exam-pagination">
 					        <button>‹</button>
 					        <button class="active">1</button>
@@ -551,8 +532,6 @@
                 </div>
             </div>
         </div>
-
-        <!-- Modal Thêm Môn Học -->
         <div id="add-subject-modal" class="modal-backdrop" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 1000; justify-content: center; align-items: center;">
             <div style="background: #fff; padding: 25px; border-radius: 12px; width: 400px; box-shadow: 0 4px 15px rgba(0,0,0,0.2); position: relative; text-align: left;">
                 <span class="close-modal" onclick="closeSubjectModal()" style="position: absolute; top: 15px; right: 15px; cursor: pointer; font-size: 20px; font-weight: bold; color: #888;">&times;</span>

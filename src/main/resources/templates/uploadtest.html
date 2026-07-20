@@ -185,8 +185,6 @@
         </div>
     </div>
 </div>
-
-<!-- Modal Mapping Excel -->
 <div class="mapping-modal-backdrop" id="mappingModal">
     <div class="mapping-modal-dialog">
         <div class="mapping-modal-header">
@@ -243,25 +241,19 @@
 
 <script>
     let excelFile = null;
-
-    // Chuyển đổi phương thức tạo đề
     const methodManual = document.getElementById('methodManual');
     const methodExcel = document.getElementById('methodExcel');
     const btnNext = document.querySelector('.btn-next');
-
     methodManual.addEventListener('click', () => {
         methodManual.classList.add('active');
         methodExcel.classList.remove('active');
         btnNext.innerHTML = 'Tiếp tục <i class="fa-solid fa-arrow-right"></i>';
     });
-
     methodExcel.addEventListener('click', () => {
         methodExcel.classList.add('active');
         methodManual.classList.remove('active');
         btnNext.innerHTML = 'Import & Tiếp tục <i class="fa-solid fa-arrow-right"></i>';
     });
-
-    // Xử lý nút Chọn file Excel
     const btnSelectExcel = document.getElementById('btnSelectExcel');
     const excelFileInput = document.getElementById('excelFileInput');
 

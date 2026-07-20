@@ -19,7 +19,6 @@ function showPage(pageClass, element) {
     if (element) {
         element.classList.add("active");
     }
-    // Lưu lại active tab để khôi phục sau khi reload
     localStorage.setItem('activeAdminTab', pageClass);
 }
 
@@ -36,7 +35,6 @@ function closeSubjectModal() {
 }
 
 document.addEventListener('DOMContentLoaded', function() {
-    // Ẩn panel chi tiết đề thi mặc định khi tải trang
     const examPage = document.querySelector('.exam-page');
     if (examPage) {
         const leftPanel = examPage.querySelector('.manage-user-test-left');
@@ -47,7 +45,6 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
-    // Đăng ký sự kiện click nút xem chi tiết đề thi (👁)
     document.querySelectorAll('.btn-view-detail').forEach(button => {
         button.addEventListener('click', function() {
             const id = this.getAttribute('data-id');
@@ -58,28 +55,24 @@ document.addEventListener('DOMContentLoaded', function() {
             const created = this.getAttribute('data-created');
             const updated = this.getAttribute('data-updated');
             const difficulty = this.getAttribute('data-difficulty');
-
             const examPage = document.querySelector('.exam-page');
             const detailPanel = examPage.querySelector('.exam-detail');
             const leftPanel = examPage.querySelector('.manage-user-test-left');
             const rightPanel = examPage.querySelector('.manage-user-right');
-
-            if (detailPanel && leftPanel && rightPanel) {
-                // Cập nhật dữ liệu từ data-attributes lên panel thông tin
+            if (detailPanel && leftPanel && rightPanel) {           
                 detailPanel.querySelector('.title').textContent = title;
                 detailPanel.querySelector('.exam-id').textContent = 'ID: #' + id;
 
                 const infoRows = detailPanel.querySelectorAll('.info-row p');
                 if (infoRows.length >= 6) {
-                    infoRows[0].textContent = subject; // Danh mục
-                    infoRows[1].textContent = questions + ' câu'; // Số câu hỏi
-                    infoRows[2].textContent = duration + ' phút'; // Thời gian làm bài
-                    infoRows[3].textContent = created; // Tạo ngày
-                    infoRows[4].textContent = updated ? updated : created; // Cập nhật cuối
-                    infoRows[5].textContent = 'Đề thi môn ' + subject + ' độ khó ' + difficulty + '.'; // Mô tả
+                    infoRows[0].textContent = subject;
+                    infoRows[1].textContent = questions + ' câu';
+                    infoRows[2].textContent = duration + ' phút';
+                    infoRows[3].textContent = created;
+                    infoRows[4].textContent = updated ? updated : created;
+                    infoRows[5].textContent = 'Đề thi môn ' + subject + ' độ khó ' + difficulty + '.';
                 }
 
-                // Cập nhật thống kê tạm thời
                 const statsValues = detailPanel.querySelectorAll('.stat-card .value');
                 if (statsValues.length >= 4) {
                     statsValues[0].textContent = '0';
@@ -88,14 +81,12 @@ document.addEventListener('DOMContentLoaded', function() {
                     statsValues[3].textContent = '0%';
                 }
 
-                // Thu hẹp bảng danh sách và hiển thị panel thông tin bên phải
                 leftPanel.style.width = '73%';
                 rightPanel.style.display = 'block';
             }
         });
     });
 
-    // Đăng ký sự kiện đóng panel chi tiết (nút ×)
     const closeExamDetail = document.querySelector('.exam-detail .close');
     if (closeExamDetail) {
         closeExamDetail.addEventListener('click', function() {
@@ -109,7 +100,6 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    // === LOGIC PHÂN TRANG CHO DANH SÁCH ĐỀ THI (5 ĐỀ/TRANG) ===
     const examRows = document.querySelectorAll('.exam-page tbody tr');
     const paginationContainer = document.getElementById('exam-pagination');
     const rowsPerPage = 5;
@@ -118,7 +108,6 @@ document.addEventListener('DOMContentLoaded', function() {
         const start = (page - 1) * rowsPerPage;
         const end = start + rowsPerPage;
 
-        // Ẩn hoặc hiển thị dòng đề thi tùy thuộc vào số trang hiện tại
         examRows.forEach((row, index) => {
             if (index >= start && index < end) {
                 row.style.display = '';
@@ -127,7 +116,6 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
 
-        // Vẽ lại các nút điều hướng phân trang
         if (paginationContainer) {
             paginationContainer.innerHTML = '';
             const totalPages = Math.ceil(examRows.length / rowsPerPage);
@@ -139,7 +127,6 @@ document.addEventListener('DOMContentLoaded', function() {
                 paginationContainer.style.display = 'flex';
             }
 
-            // Nút Quay lại (‹)
             const prevButton = document.createElement('button');
             prevButton.innerHTML = '‹';
             if (page === 1) {
@@ -151,7 +138,6 @@ document.addEventListener('DOMContentLoaded', function() {
             }
             paginationContainer.appendChild(prevButton);
 
-            // Các nút số trang
             for (let i = 1; i <= totalPages; i++) {
                 const pageButton = document.createElement('button');
                 pageButton.innerText = i;
@@ -162,7 +148,6 @@ document.addEventListener('DOMContentLoaded', function() {
                 paginationContainer.appendChild(pageButton);
             }
 
-            // Nút Tiếp theo (›)
             const nextButton = document.createElement('button');
             nextButton.innerHTML = '›';
             if (page === totalPages) {
@@ -180,7 +165,6 @@ document.addEventListener('DOMContentLoaded', function() {
         renderExamPage(1);
     }
 
-    // === XỬ LÝ SUBMIT FORM THÊM MÔN HỌC ===
     const addSubjectForm = document.getElementById('add-subject-form');
     if (addSubjectForm) {
         addSubjectForm.addEventListener('submit', function(e) {
@@ -190,7 +174,6 @@ document.addEventListener('DOMContentLoaded', function() {
             const code = document.getElementById('modal-sub-code').value.trim().toUpperCase();
             const status = document.getElementById('modal-sub-status').value === 'true';
 
-            // Gửi request POST lưu môn học mới
             fetch('/admin/api/add-subject', {
                 method: 'POST',
                 headers: {
@@ -202,7 +185,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 if (res.ok) {
                     alert('Thêm môn học mới thành công!');
                     closeSubjectModal();
-                    // Lưu trạng thái môn học để mở lại tab khi reload
+
                     localStorage.setItem('activeAdminTab', 'subject-page');
                     window.location.reload();
                 } else {
@@ -215,7 +198,6 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    // === KHÔI PHỤC ACTIVE TAB SAU KHI RELOAD ===
     const savedActiveTab = localStorage.getItem('activeAdminTab');
     if (savedActiveTab) {
         localStorage.removeItem('activeAdminTab');
@@ -224,4 +206,5 @@ document.addEventListener('DOMContentLoaded', function() {
             showPage(savedActiveTab, menuItem);
         }
     }
+
 });

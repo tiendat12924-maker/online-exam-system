@@ -9,6 +9,8 @@ body {
 }
 .container {
     display: flex;
+    height: 100%;
+    overflow: hidden;
 }
 .sidebar {
     position: relative;
@@ -70,6 +72,8 @@ body {
 .main {
     flex: 1;
     padding: 20px;
+    height: 100vh;
+    overflow-y: scroll; 
 }
 .header {
     display: flex;
@@ -221,6 +225,9 @@ button:hover {
     display: flex;
     align-items: center;
     gap: 10px;
+}
+.home-page .user-info{
+	justify-content: center;
 }
 .user-info img {
     width: 40px;

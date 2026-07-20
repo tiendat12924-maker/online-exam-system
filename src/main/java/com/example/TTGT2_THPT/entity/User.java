@@ -1,5 +1,7 @@
 package com.example.TTGT2_THPT.entity;
 
+import java.time.LocalDateTime;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -25,8 +27,29 @@ public class User {
     @ManyToOne
     @JoinColumn(name = "role_id", nullable = false)
     private Role role;
+    private String resetCode;
 
-    // Getter Setter
+    private LocalDateTime resetExpired;
+    
+    
+
+    public String getResetCode() {
+		return resetCode;
+	}
+
+	public void setResetCode(String resetCode) {
+		this.resetCode = resetCode;
+	}
+
+	public LocalDateTime getResetExpired() {
+		return resetExpired;
+	}
+
+	public void setResetExpired(LocalDateTime resetExpired) {
+		this.resetExpired = resetExpired;
+	}
+
+	// Getter Setter
     public Long getId() {
         return id;
     }

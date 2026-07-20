@@ -339,20 +339,16 @@
             <div class="tende" th:text="${test.title}">Tên đề thi</div>
         </div>
     </div>
-
     <div class="container">
-        <!-- Dashboard kết quả -->
         <div class="score-card">
             <div class="score-circle" th:classappend="${score >= 8.0} ? 'high' : (${score >= 5.0} ? 'medium' : 'low')">
                 <span class="score-number" th:text="${score}">8.5</span>
                 <span class="score-label">Điểm số</span>
             </div>
-
             <div class="congratulations" th:text="${score >= 8.0} ? 'Xuất sắc! Chúc mừng bạn.' : (${score >= 5.0} ? 'Đạt yêu cầu! Hãy cố gắng thêm.' : 'Chưa đạt! Cần luyện tập thêm.')">
                 Lời nhắn chúc mừng
             </div>
             <div class="sub-message">Bạn đã hoàn thành bài thi trắc nghiệm. Chi tiết số câu đúng và sai hiển thị ở bảng dưới.</div>
-
             <div class="stats-grid">
                 <div class="stat-item">
                     <div class="stat-val correct" th:text="${correctCount}">18</div>
@@ -368,45 +364,32 @@
                 </div>
             </div>
         </div>
-
-        <!-- Chi tiết bài làm -->
         <div class="results-header">Chi tiết đáp án & giải thích</div>
-
         <div class="question-list">
             <div class="question-card" 
                  th:each="question, stat : ${test.questions}"
                  th:classappend="${questionResults.get(question.id + '')} ? 'is-correct' : 'is-wrong'">
-                
                 <div class="question-header">
                     <span class="q-number" th:text="'Câu ' + ${stat.count}">Câu 1</span>
                     <span class="q-status-tag" th:text="${questionResults.get(question.id + '')} ? 'ĐÚNG' : 'SAI'">TRẠNG THÁI</span>
                 </div>
-
-                <!-- Hiện đoạn văn đọc hiểu nếu có -->
                 <div class="passage-section" th:if="${question.group != null}">
                     <strong style="display: block; margin-bottom: 6px;" th:text="${question.group.title}">Đoạn văn đọc hiểu</strong>
                     <div th:utext="${question.group.passage}">Nội dung đoạn văn...</div>
                 </div>
-
                 <div class="question-content" th:text="${question.content}">Nội dung câu hỏi...</div>
-
                 <div class="answers">
-                    <!-- Duyệt qua các đáp án của câu hỏi -->
                     <div class="answer" 
                          th:each="answer : ${question.answers}"
-                         th:classappend="${answer.isCorrect} ? 'correct-answer' : (${selectedAnswers.get(question.id + '') != null && selectedAnswers.get(question.id + '').equals(answer.id)} ? 'wrong-user-choice' : '')">
-                        
+                         th:classappend="${answer.isCorrect} ? 'correct-answer' : (${selectedAnswers.get(question.id + '') != null && selectedAnswers.get(question.id + '').equals(answer.id)} ? 'wrong-user-choice' : '')">                        
                         <div class="answer-left">
                             <div class="label" th:text="${answer.label}">A</div>
                             <span th:text="${answer.content}">Nội dung đáp án</span>
-                        </div>
-                        
+                        </div>                        
                         <div class="choice-container">
-                            <!-- Trường hợp 1: Đáp án đúng của hệ thống -->
                             <span class="badge-info" th:if="${answer.isCorrect}">
                                 <i class="fa-solid fa-check"></i> Đáp án đúng
                             </span>
-                            <!-- Trường hợp 2: Lựa chọn sai của thí sinh -->
                             <span class="badge-info" th:if="${!answer.isCorrect && selectedAnswers.get(question.id + '') != null && selectedAnswers.get(question.id + '').equals(answer.id)}">
                                 <i class="fa-solid fa-xmark"></i> Bạn chọn sai
                             </span>

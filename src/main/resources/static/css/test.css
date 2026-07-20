@@ -62,11 +62,15 @@ th{
     border-bottom:1px solid #e5e7eb;
 }
 
+.table-test td{
+	width: 0;
+}
 td{
     padding:18px;
     border-bottom:1px solid #ececec;
     vertical-align:middle;
     text-align: center;
+   
 }
 
 tbody tr:hover{

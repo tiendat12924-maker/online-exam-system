@@ -205,7 +205,7 @@
     box-shadow: 0 8px 24px rgba(0,0,0,0.06);
     transition: all 0.3s ease;
     position: relative;
-    margin: 0 20px;
+    margin: 20px;
 }
 .exam-card:hover {
     transform: translateY(-6px);
@@ -269,7 +269,7 @@
 }
 .btn-primary {
     flex: 1;
-    background: #e5e7eb; /* xám */
+    background: #e5e7eb;
     color: #374151;
     border: none;
     padding: 10px;

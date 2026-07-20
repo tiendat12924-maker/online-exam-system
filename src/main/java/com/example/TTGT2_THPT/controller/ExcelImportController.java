@@ -23,19 +23,12 @@ import com.example.TTGT2_THPT.service.ExcelImportService;
 @RestController
 @RequestMapping("/api/excel")
 public class ExcelImportController {
-
     @Autowired
     private ExcelImportService excelImportService;
-
     @Autowired
     private RepositoryTest repoTest;
-
     @Autowired
     private RepositorySubject repoSub;
-
-    /**
-     * API tạo nhanh đề thi phục vụ luồng import Excel
-     */
     @PostMapping("/create-test")
     public ResponseEntity<?> createTest(
             @RequestParam("title") String title,
@@ -45,7 +38,6 @@ public class ExcelImportController {
         try {
             Subjects subject = repoSub.findById(subjectId)
                     .orElseThrow(() -> new RuntimeException("Không tìm thấy môn học với ID: " + subjectId));
-
             Test test = new Test();
             test.setTitle(title);
             test.setSubject(subject);
@@ -54,8 +46,7 @@ public class ExcelImportController {
             test.setYear(java.time.LocalDate.now().getYear());
             test.setType("Đề Excel Import");
             test.setImage("");
-            test.setCreatedBy(1); // Mặc định là admin
-
+            test.setCreatedBy(1);
             Test savedTest = repoTest.save(test);
             return ResponseEntity.ok(Map.of("success", true, "testId", savedTest.getId()));
         } catch (Exception e) {
@@ -64,10 +55,6 @@ public class ExcelImportController {
                     .body("Lỗi khi tạo đề thi: " + e.getMessage());
         }
     }
-
-    /**
-     * API đọc danh sách các cột tiêu đề của file Excel
-     */
     @PostMapping("/read-headers")
     public ResponseEntity<?> readHeaders(@RequestParam("file") MultipartFile file) {
         if (file.isEmpty()) {
@@ -82,10 +69,6 @@ public class ExcelImportController {
                     .body("Lỗi khi đọc file Excel: " + e.getMessage());
         }
     }
-
-    /**
-     * API thực hiện Import câu hỏi
-     */
     @PostMapping("/import")
     public ResponseEntity<?> importQuestions(
             @RequestParam("file") MultipartFile file,
@@ -98,7 +81,6 @@ public class ExcelImportController {
             @RequestParam("answerCCol") String answerCCol,
             @RequestParam("answerDCol") String answerDCol,
             @RequestParam("correctAnswerCol") String correctAnswerCol) {
-
         if (file.isEmpty()) {
             return ResponseEntity.badRequest().body("File không được trống.");
         }
@@ -113,7 +95,6 @@ public class ExcelImportController {
             mapping.setAnswerCCol(answerCCol);
             mapping.setAnswerDCol(answerDCol);
             mapping.setCorrectAnswerCol(correctAnswerCol);
-
             excelImportService.importExcel(file, testId, mapping);
             return ResponseEntity.ok(Map.of("success", true, "message", "Import câu hỏi thành công!"));
         } catch (Exception e) {
