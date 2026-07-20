@@ -113,7 +113,7 @@
         <div class="header-right">
 			<button type="button"  th:if="${session.user == null}" onclick="window.location.href='/login'">  Đăng nhập
 			</button>
-			<button type="button" th:if="${session.user != null}" th:text="${session.user.fullName}" onclick="handleLogout()">
+			<button type="button" th:if="${session.user != null}" th:text="${session.user.fullName}" onclick="window.location.href='/profile'">
 			</button>
 		</div>
     </div>

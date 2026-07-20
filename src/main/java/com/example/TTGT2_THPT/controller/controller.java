@@ -33,6 +33,12 @@ import com.example.TTGT2_THPT.repository.RepositoryTest;
 import com.example.TTGT2_THPT.repository.RepositoryUser;
 import com.example.TTGT2_THPT.service.ServiceSubject;
 import com.example.TTGT2_THPT.service.ServiceTest;
+import com.example.TTGT2_THPT.entity.TestAttempts;
+import com.example.TTGT2_THPT.entity.UserAnswers;
+import com.example.TTGT2_THPT.entity.AttemptStatus;
+import com.example.TTGT2_THPT.repository.RepositoryTestAttempt;
+import com.example.TTGT2_THPT.repository.RepositoryUserAnswer;
+import java.time.Duration;
 import com.example.TTGT2_THPT.service.ServiceUser;
 
 import jakarta.servlet.http.HttpSession;
@@ -57,6 +63,10 @@ public class controller {
 	RepositoryQuestionGroup repoGroup;
 	@Autowired
 	ServiceTest svTest;
+	@Autowired
+	RepositoryTestAttempt repoAttempt;
+	@Autowired
+	RepositoryUserAnswer repoUserAnswer;
 	@GetMapping("/")
 	public String home() {
 		return "redirect:/index";
@@ -129,7 +139,11 @@ public class controller {
 	    return "review";
 	}
 	@PostMapping("/submitdethi/{id}")
-	public String submitDeThi(@PathVariable Integer id, @RequestParam Map<String, String> allParams, Model model) {
+	public String submitDeThi(@PathVariable Integer id, @RequestParam Map<String, String> allParams, Model model, HttpSession session) {
+	    User user = (User) session.getAttribute("user");
+	    if (user == null) {
+	        return "redirect:/login";
+	    }
 	    Test test = repoTest.findById(id)
 	            .orElseThrow(() -> new RuntimeException("Không tìm thấy đề"));
 	    int correctCount = 0;
@@ -171,6 +185,44 @@ public class controller {
 	        score = (correctCount * 10.0) / test.getQuestions().size();
 	        score = Math.round(score * 100.0) / 100.0;
 	    }
+
+	    LocalDateTime submittedAt = LocalDateTime.now();
+	    LocalDateTime startedAt = (LocalDateTime) session.getAttribute("exam_start_time_" + id);
+	    if (startedAt == null) {
+	        startedAt = submittedAt.minusMinutes(test.getDuration() != null ? test.getDuration() : 45);
+	    }
+	    int timeSpent = (int) Duration.between(startedAt, submittedAt).toSeconds();
+
+	    TestAttempts attempt = new TestAttempts();
+	    attempt.setUser(user);
+	    attempt.setTest(test);
+	    attempt.setCorrectCount(correctCount);
+	    attempt.setWrongCount(wrongCount);
+	    attempt.setScore(score);
+	    attempt.setTimeSpent(timeSpent);
+	    attempt.setStartedAt(startedAt);
+	    attempt.setSubmittedAt(submittedAt);
+	    attempt.setStatus(AttemptStatus.SUBMITTED);
+	    TestAttempts savedAttempt = repoAttempt.save(attempt);
+
+	    for (Questions question : test.getQuestions()) {
+	        String paramValue = allParams.get("question_" + question.getId());
+	        if (paramValue != null && !paramValue.trim().isEmpty()) {
+	            try {
+	                Long selectedAnsId = Long.parseLong(paramValue);
+	                UserAnswers uAns = new UserAnswers();
+	                uAns.setAttempt(savedAttempt);
+	                uAns.setQuestion(question);
+	                Answers dbAns = repoAnswer.findById(selectedAnsId).orElse(null);
+	                uAns.setAnswer(dbAns);
+	                uAns.setIsCorrect(dbAns != null && Boolean.TRUE.equals(dbAns.getIsCorrect()));
+	                repoUserAnswer.save(uAns);
+	            } catch (NumberFormatException e) {
+	            }
+	        }
+	    }
+	    session.removeAttribute("exam_start_time_" + id);
+
 	    model.addAttribute("test", test);
 	    model.addAttribute("correctCount", correctCount);
 	    model.addAttribute("wrongCount", wrongCount);
@@ -263,9 +315,14 @@ public class controller {
 	    return "trangdethi";
 	}
 	@GetMapping("/chitietde/{id}")
-	public String chiTietDe(@PathVariable Integer id, Model model) {
+	public String chiTietDe(@PathVariable Integer id, Model model, HttpSession session) {
+	    User user = (User) session.getAttribute("user");
+	    if (user == null) {
+	        return "redirect:/login";
+	    }
 	    Test test = repoTest.findById(id)
 	            .orElseThrow(() -> new RuntimeException("Không tìm thấy đề"));
+	    session.setAttribute("exam_start_time_" + id, LocalDateTime.now());
 	    model.addAttribute("test", test);
 	    return "chitietde";
 	}
@@ -482,5 +539,40 @@ public class controller {
 	    session.removeAttribute("email");
 
 	    return "redirect:/login";
+	}
+
+	@GetMapping("/profile")
+	public String showProfile(HttpSession session, Model model) {
+	    User user = (User) session.getAttribute("user");
+	    if (user == null) {
+	        return "redirect:/login";
+	    }
+	    List<TestAttempts> attempts = repoAttempt.findByUserOrderBySubmittedAtDesc(user);
+	    model.addAttribute("user", user);
+	    model.addAttribute("attempts", attempts);
+	    return "profile";
+	}
+
+	@GetMapping("/attempt/{attemptId}/review")
+	public String reviewAttemptDetail(@PathVariable Long attemptId, HttpSession session, Model model) {
+	    User user = (User) session.getAttribute("user");
+	    if (user == null) {
+	        return "redirect:/login";
+	    }
+	    TestAttempts attempt = repoAttempt.findById(attemptId)
+	            .orElseThrow(() -> new RuntimeException("Không tìm thấy lượt thi"));
+	    
+	    if (!attempt.getUser().getId().equals(user.getId())) {
+	        throw new RuntimeException("Bạn không có quyền truy cập kết quả này");
+	    }
+	    
+	    List<UserAnswers> userAnswers = repoUserAnswer.findByAttempt(attempt);
+	    Map<Integer, UserAnswers> userAnswersMap = userAnswers.stream()
+	            .collect(Collectors.toMap(ua -> ua.getQuestion().getId(), ua -> ua));
+	    
+	    model.addAttribute("attempt", attempt);
+	    model.addAttribute("test", attempt.getTest());
+	    model.addAttribute("userAnswersMap", userAnswersMap);
+	    return "attempt_review";
 	}
 }

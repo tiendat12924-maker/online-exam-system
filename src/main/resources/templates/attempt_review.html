@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+    <title>Xem lại chi tiết bài làm - THPT Online Exam</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap');
+
+        :root {
+            --primary: #2563eb;
+            --primary-hover: #1d4ed8;
+            --success: #10b981;
+            --success-light: #ecfdf5;
+            --success-border: #a7f3d0;
+            --danger: #ef4444;
+            --danger-light: #fef2f2;
+            --danger-border: #fca5a5;
+            --warning: #f59e0b;
+            --warning-light: #fffbeb;
+            --slate-50: #f8fafc;
+            --slate-100: #f1f5f9;
+            --slate-200: #e2e8f0;
+            --slate-300: #cbd5e1;
+            --slate-700: #334155;
+            --slate-900: #0f172a;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: var(--slate-50);
+            color: var(--slate-900);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            padding-bottom: 60px;
+        }
+
+        /* Header Styling */
+        .header {
+            height: 70px;
+            background: #ffffff;
+            border-bottom: 1px solid var(--slate-200);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 24px;
+            box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .logo img {
+            height: 32px;
+        }
+
+        .btn-back {
+            height: 40px;
+            padding: 0 16px;
+            border-radius: 10px;
+            border: 1px solid var(--slate-200);
+            background: #ffffff;
+            color: var(--slate-700);
+            font-weight: 600;
+            font-size: 14px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.2s;
+        }
+
+        .btn-back:hover {
+            background: var(--slate-100);
+            border-color: #cbd5e1;
+        }
+
+        .tende {
+            font-size: 16px;
+            font-weight: 700;
+            color: var(--slate-900);
+        }
+
+        /* Container Layout */
+        .container {
+            max-width: 800px;
+            margin: 40px auto;
+            padding: 0 20px;
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        /* Result Overview Banner */
+        .overview-card {
+            background: #ffffff;
+            border: 1px solid var(--slate-200);
+            border-radius: 16px;
+            padding: 24px;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 16px;
+            text-align: center;
+        }
+
+        @media (max-width: 600px) {
+            .overview-card {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        .metric-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .metric-label {
+            font-size: 12px;
+            color: #64748b;
+            font-weight: 600;
+            text-transform: uppercase;
+            margin-bottom: 6px;
+        }
+
+        .metric-value {
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--slate-900);
+        }
+
+        .score-value {
+            font-size: 28px;
+            color: var(--primary);
+        }
+
+        .score-high {
+            color: var(--success);
+        }
+
+        .score-medium {
+            color: var(--warning);
+        }
+
+        .score-low {
+            color: var(--danger);
+        }
+
+        /* Question Cards */
+        .question-card {
+            background: #ffffff;
+            border: 1px solid var(--slate-200);
+            border-radius: 16px;
+            padding: 28px;
+            margin-bottom: 24px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+        }
+
+        .question-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 16px;
+            border-bottom: 1px solid var(--slate-100);
+            padding-bottom: 12px;
+        }
+
+        .q-number {
+            font-size: 14px;
+            font-weight: 700;
+            color: var(--slate-900);
+            text-transform: uppercase;
+        }
+
+        .q-tag {
+            font-size: 11px;
+            font-weight: 600;
+            padding: 4px 8px;
+            background: var(--slate-100);
+            color: var(--slate-700);
+            border-radius: 12px;
+        }
+
+        .passage-section {
+            background: var(--slate-50);
+            border-left: 4px solid var(--slate-300);
+            padding: 16px;
+            border-radius: 0 8px 8px 0;
+            margin-bottom: 18px;
+            font-size: 14px;
+            line-height: 1.6;
+            color: var(--slate-700);
+            max-height: 200px;
+            overflow-y: auto;
+        }
+
+        .question-content {
+            font-size: 15px;
+            line-height: 1.6;
+            color: var(--slate-900);
+            font-weight: 600;
+            margin-bottom: 20px;
+        }
+
+        .answers {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .answer {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 12px 16px;
+            border-radius: 10px;
+            border: 1px solid var(--slate-200);
+            background: #ffffff;
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--slate-700);
+        }
+
+        .answer-left {
+            display: flex;
+            align-items: center;
+        }
+
+        .label {
+            width: 24px;
+            height: 24px;
+            border-radius: 6px;
+            background: var(--slate-100);
+            color: #64748b;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            margin-right: 12px;
+            font-size: 12px;
+        }
+
+        /* Đáp án đúng của hệ thống */
+        .answer.correct-system {
+            border-color: var(--success-border);
+            background: var(--success-light);
+            color: #065f46;
+            font-weight: 600;
+        }
+
+        .answer.correct-system .label {
+            background: var(--success);
+            color: #ffffff;
+        }
+
+        /* Đáp án người dùng chọn bị sai */
+        .answer.selected-wrong {
+            border-color: var(--danger-border);
+            background: var(--danger-light);
+            color: #9f1239;
+            font-weight: 600;
+        }
+
+        .answer.selected-wrong .label {
+            background: var(--danger);
+            color: #ffffff;
+        }
+
+        /* Icon Status */
+        .status-icon {
+            font-size: 16px;
+            margin-left: 8px;
+        }
+
+        .status-icon.correct {
+            color: var(--success);
+        }
+
+        .status-icon.wrong {
+            color: var(--danger);
+        }
+
+        .not-answered-warning {
+            padding: 12px 16px;
+            border-radius: 10px;
+            border: 1px solid var(--warning-light);
+            background: var(--warning-light);
+            color: #92400e;
+            font-size: 14px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="header-left">
+            <button class="btn-back" onclick="location.href='/profile'">
+                <i class="fa-solid fa-arrow-left"></i> Quay lại hồ sơ
+            </button>
+            <div class="logo"><img src="/images/logo3.png" alt="Logo"></div>
+            <div class="tende" th:text="${test.title}">Tên đề thi</div>
+        </div>
+    </div>
+
+    <div class="container">
+        <!-- Metric Cards -->
+        <div class="overview-card">
+            <div class="metric-item">
+                <span class="metric-label">Kết Quả Điểm</span>
+                <span class="metric-value score-value" 
+                      th:classappend="${attempt.score >= 8.0} ? 'score-high' : (${attempt.score >= 5.0} ? 'score-medium' : 'score-low')"
+                      th:text="${#numbers.formatDecimal(attempt.score, 1, 1)}">8.5</span>
+            </div>
+            <div class="metric-item">
+                <span class="metric-label">Số Câu Đúng</span>
+                <span class="metric-value" th:text="${attempt.correctCount} + '/' + ${test.questions.size()}">32/40</span>
+            </div>
+            <div class="metric-item">
+                <span class="metric-label">Thời Gian Làm</span>
+                <span class="metric-value" th:text="${attempt.timeSpent != null ? (attempt.timeSpent / 60) + 'p ' + (attempt.timeSpent % 60) + 's' : 'N/A'}">15p 20s</span>
+            </div>
+            <div class="metric-item">
+                <span class="metric-label">Thời Điểm Nộp</span>
+                <span class="metric-value" style="font-size: 14px; color: #64748b;" th:text="${attempt.submittedAt != null ? #temporals.format(attempt.submittedAt, 'dd/MM/yyyy HH:mm') : 'N/A'}">20/07/2026 14:35</span>
+            </div>
+        </div>
+
+        <!-- Question List -->
+        <div class="question-list">
+            <div class="question-card" th:each="question, stat : ${test.questions}">
+                <div class="question-header">
+                    <span class="q-number" th:text="'Câu ' + ${stat.count}">Câu 1</span>
+                    <span class="q-tag" th:text="${question.group != null ? 'Câu hỏi nhóm' : 'Câu hỏi đơn'}">Loại câu</span>
+                </div>
+
+                <!-- Passage for Group Questions -->
+                <div class="passage-section" th:if="${question.group != null}">
+                    <strong style="display: block; margin-bottom: 6px;" th:text="${question.group.title}">Đoạn văn đọc hiểu</strong>
+                    <div th:utext="${question.group.passage}">Nội dung đoạn văn...</div>
+                </div>
+
+                <div class="question-content" th:text="${question.content}">Nội dung câu hỏi...</div>
+
+                <div class="answers">
+                    <!-- Duyệt qua tất cả các đáp án để so khớp lựa chọn và đáp án đúng -->
+                    <div th:each="answer : ${question.answers}">
+                        <!-- Khai báo các trạng thái bằng biến Thymeleaf -->
+                        <div th:with="
+                            userAns=${userAnswersMap.get(question.id)},
+                            isSelected=${userAns != null && userAns.answer != null && userAns.answer.id.equals(answer.id)},
+                            isCorrectAns=${answer.isCorrect}
+                        ">
+                            <!-- Đáp án Đúng của Hệ thống (Bất kể user có chọn hay không) -->
+                            <div class="answer correct-system" th:if="${isCorrectAns}">
+                                <div class="answer-left">
+                                    <div class="label" th:text="${answer.label}">A</div>
+                                    <span th:text="${answer.content}">Đáp án đúng</span>
+                                </div>
+                                <span class="status-icon correct" th:if="${isSelected}"><i class="fa-solid fa-circle-check"></i> (Bạn chọn đúng)</span>
+                                <span class="status-icon correct" th:if="${!isSelected}"><i class="fa-solid fa-check"></i> (Đáp án đúng)</span>
+                            </div>
+
+                            <!-- Đáp án Người dùng chọn nhưng bị SAI -->
+                            <div class="answer selected-wrong" th:if="${isSelected && !isCorrectAns}">
+                                <div class="answer-left">
+                                    <div class="label" th:text="${answer.label}">B</div>
+                                    <span th:text="${answer.content}">Đáp án người dùng chọn sai</span>
+                                </div>
+                                <span class="status-icon wrong"><i class="fa-solid fa-circle-xmark"></i> (Bạn chọn sai)</span>
+                            </div>
+
+                            <!-- Các đáp án bình thường (không chọn và không phải đáp án đúng) -->
+                            <div class="answer" th:if="${!isSelected && !isCorrectAns}">
+                                <div class="answer-left">
+                                    <div class="label" th:text="${answer.label}">C</div>
+                                    <span th:text="${answer.content}">Đáp án bình thường</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Cảnh báo nếu thí sinh chưa chọn đáp án nào cho câu hỏi này -->
+                <div class="not-answered-warning" style="margin-top: 12px;" th:if="${userAnswersMap.get(question.id) == null}">
+                    <i class="fa-solid fa-triangle-exclamation"></i>
+                    <span>Bạn chưa lựa chọn đáp án cho câu hỏi này.</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
